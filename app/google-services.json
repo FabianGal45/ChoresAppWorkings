@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "977687966954",
+    "project_id": "mydumbjavaapp",
+    "storage_bucket": "mydumbjavaapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:977687966954:android:518c8426cd69b955965393",
+        "android_client_info": {
+          "package_name": "com.example.mydumbjavaapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "977687966954-i39vruh45p1bgll01oq5enaas1g2uj91.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtVcokYGbUOwxPDRj-mkYN3atPP76LGYI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "977687966954-i39vruh45p1bgll01oq5enaas1g2uj91.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
