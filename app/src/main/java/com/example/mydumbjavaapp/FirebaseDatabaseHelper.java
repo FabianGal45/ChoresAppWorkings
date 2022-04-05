@@ -30,6 +30,7 @@ public class FirebaseDatabaseHelper {
     }
 
     public void readChores(final DataStatus dataStatus){
+
         mReferenceChores.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -37,19 +38,23 @@ public class FirebaseDatabaseHelper {
                 List<String> users = new ArrayList<>();
                 List<String> keys = new ArrayList<>();
 
-                System.out.println("### "+ snapshot.child(""));
+                //System.out.println("### "+ snapshot.child("Fabian").child("1").getValue());
+                //snapshot.child("Fabian").child("1").getValue(): {date=2022-04-05, name=Clean the dishes, priority=10}
+                //snapshot.child("Fabian"): DataSnapshot { key = Fabian, value = {1={date=2022-04-05, name=Clean the dishes, priority=10}, 2={date=2022-04-06, name=Wash the cars, priority=5}} }
                 //snapshot.getValue(): {James=[null, {priority=9, name=Shop for milk, finish_by=2022-04-06}], Fabian=[null, {date=2022-04-05, name=Clean the dishes, priority=10}, {date=2022-04-06, name=Wash the car, priotity=5}], Mark=[null, {date=2022-04-05, name=Clean, priority=9}, {date=2022-04-05, name=clean car, priority=7}]}
                 //snapshot.getKey(): chores
-                //snapshot.getChildren().toString(): com.google.firebase.database.DataSnapshot$1@2997f9d
 
                 //gets the info of the user from the database
                 for(DataSnapshot UserNode : snapshot.getChildren()){
                     users.add(UserNode.getKey()); // [Fabian , James, Mark]
-//                    Chore chore = UserNode.getValue(Chore.class);
-//                    chores.add(chore);
+                    System.out.println("### "+UserNode.getKey());
+                    for(DataSnapshot keyNode : snapshot.child(UserNode.getKey()).getChildren()){
+                        keys.add(keyNode.getKey());//[1, 2, 1, 1, 2]
+                        System.out.println("###> key: "+keyNode.getKey()+" > "+ keyNode.getValue());
+                        Chore chore = keyNode.getValue(Chore.class);
+                        chores.add(chore);
 
-                    System.out.println("### keynode "+ UserNode.getValue());
-                    System.out.println("### Array: "+ keys);
+                    }
 
                     // keyNode:
                     // DataSnapshot { key = Fabian, value = {1={date=2022-04-05, name=Clean the dishes, priority=10}, 2={date=2022-04-06, name=Wash the car, priotity=5}} }
@@ -61,6 +66,9 @@ public class FirebaseDatabaseHelper {
                     // James
                     // Mark
                 }
+                System.out.println(">>> users: "+users);
+                System.out.println(">>> keys: "+keys);
+                System.out.println(">>> chores: "+chores);
 //                dataStatus.DataIsLoaded(chores,keys);
             }
 

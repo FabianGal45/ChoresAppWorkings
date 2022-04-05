@@ -14,7 +14,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
-    private LocalDate date;
+//    private LocalDate date;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        date = LocalDate.now();
+//        date = LocalDate.now();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewChores);
         new FirebaseDatabaseHelper().readChores(new FirebaseDatabaseHelper.DataStatus() {

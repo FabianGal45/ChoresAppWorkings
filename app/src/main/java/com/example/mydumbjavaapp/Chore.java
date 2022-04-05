@@ -5,13 +5,13 @@ import java.time.LocalDate;
 public class Chore {
     private String name;
     private int priority;
-    private LocalDate date;
+    private String date;
 
     //Constructors
     public Chore() {
     }
 
-    public Chore(String name, int priority, LocalDate date) {
+    public Chore(String name, int priority, String date) {
         this.name = name;
         this.priority = priority;
         this.date = date;
@@ -34,11 +34,11 @@ public class Chore {
         this.priority = priority;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }
