@@ -1,21 +1,28 @@
 package com.example.mydumbjavaapp;
 
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
+    private LocalDate date;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        date = LocalDate.now();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewChores);
         new FirebaseDatabaseHelper().readChores(new FirebaseDatabaseHelper.DataStatus() {

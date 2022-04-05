@@ -1,17 +1,23 @@
 package com.example.mydumbjavaapp;
 
+import java.time.LocalDate;
+
 public class Chore {
     private String name;
-    private String assigned_to;
+    private int priority;
+    private LocalDate date;
 
+    //Constructors
     public Chore() {
     }
 
-    public Chore(String name, String assignedTo) {
+    public Chore(String name, int priority, LocalDate date) {
         this.name = name;
-        this.assigned_to = assignedTo;
+        this.priority = priority;
+        this.date = date;
     }
 
+    //Getters and setters
     public String getName() {
         return name;
     }
@@ -20,11 +26,19 @@ public class Chore {
         this.name = name;
     }
 
-    public String getAssigned_to() {
-        return assigned_to;
+    public int getPriority() {
+        return priority;
     }
 
-    public void setAssigned_to(String assigned_to) {
-        this.assigned_to = assigned_to;
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }
