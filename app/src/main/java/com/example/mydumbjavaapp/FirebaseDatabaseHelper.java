@@ -16,11 +16,10 @@ import java.util.List;
 public class FirebaseDatabaseHelper {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
-    private List<Chore> chores = new ArrayList<>();
     private List<User> users = new ArrayList<>();
 
     public interface DataStatus{
-        void DataIsLoaded(List<Chore> chores, List<User> users);
+        void DataIsLoaded(List<User> users);
         void DataInserter();
         void DataUpdated();
         void DataDeleted();
@@ -36,23 +35,23 @@ public class FirebaseDatabaseHelper {
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                chores.clear();
-                users.clear();
-                List<String> keys = new ArrayList<>();
+                users.clear();//Clears the previous users from the list to replace them with the new ones
 
-                //gets the info of the user from the database
+                //Loops through all the children (users) of the chores parent in the database.
                 for(DataSnapshot UserNode : snapshot.getChildren()){
-                    User user = new User(UserNode.getKey());
-                    users.add(user); // [Fabian , James, Mark]
                     System.out.println("### "+UserNode.getKey());
+                    User user = new User();
+                    user.setName(UserNode.getKey());//Gets the key of the reference e.g Fabian, James, Mark
+                    users.add(user); //Adds to the user list
 
+                    //loops through all the child nodes of the users to grab all the chores of the user.
                     for(DataSnapshot keyNode : snapshot.child(UserNode.getKey()).getChildren()){
                         Chore chore = keyNode.getValue(Chore.class);
-                        chores.add(chore);
-                        System.out.println("###> key: "+keyNode.getKey()+" > "+ keyNode.getValue());
+                        user.addToChores(chore);
+                        System.out.println("###> chores: "+keyNode.getKey()+" > "+ keyNode.getValue());
                     }
                 }
-                dataStatus.DataIsLoaded(chores, users);
+                dataStatus.DataIsLoaded(users);
             }
 
             @Override
