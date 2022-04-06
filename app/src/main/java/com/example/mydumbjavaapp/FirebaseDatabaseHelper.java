@@ -32,48 +32,27 @@ public class FirebaseDatabaseHelper {
         mReference = mDatabase.getReference("chores");
     }
 
-    public void readUsers(final DataStatus dataStatus){
-        mReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                users.clear();
-                for(DataSnapshot UserNode : snapshot.getChildren()){
-                    User user = new User(UserNode.getKey());
-                    users.add(user); // [Fabian , James, Mark]
-                    System.out.println("### "+UserNode.getKey());
-                }
-                System.out.println(">>> users: "+users);
-                dataStatus.DataIsLoaded(chores, users);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    //Make this readChoresForUser and pass the user
-    public void readChores(final DataStatus dataStatus){
-
+    public void readData(final DataStatus dataStatus){
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 chores.clear();
+                users.clear();
                 List<String> keys = new ArrayList<>();
 
                 //gets the info of the user from the database
+                for(DataSnapshot UserNode : snapshot.getChildren()){
+                    User user = new User(UserNode.getKey());
+                    users.add(user); // [Fabian , James, Mark]
+                    System.out.println("### "+UserNode.getKey());
 
-                for(DataSnapshot keyNode : snapshot.getChildren()){
-                    keys.add(keyNode.getKey());//[1, 2, 1, 1, 2]
-//                    Chore chore = keyNode.getValue(Chore.class);
-//                    chores.add(chore);
-                    System.out.println("###> key: "+keyNode.getKey()+" > "+ keyNode.getValue());
+                    for(DataSnapshot keyNode : snapshot.child(UserNode.getKey()).getChildren()){
+                        Chore chore = keyNode.getValue(Chore.class);
+                        chores.add(chore);
+                        System.out.println("###> key: "+keyNode.getKey()+" > "+ keyNode.getValue());
+                    }
                 }
-
-//                dataStatus.DataIsLoaded(chores, users);
-                System.out.println(">>> keys: "+keys);//Todo: Organise the keys
-                System.out.println(">>> chores: "+chores.size());
+                dataStatus.DataIsLoaded(chores, users);
             }
 
             @Override

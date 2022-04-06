@@ -13,6 +13,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mUserRV;
+    private RecyclerView mChoreRV;
 //    private LocalDate date;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 //        date = LocalDate.now();
 
         mUserRV = (RecyclerView) findViewById(R.id.usersRecyclerView);
-        new FirebaseDatabaseHelper().readUsers(new FirebaseDatabaseHelper.DataStatus() {
+        new FirebaseDatabaseHelper().readData(new FirebaseDatabaseHelper.DataStatus() {
             @Override
             public void DataIsLoaded(List<Chore> chores, List<User> users) {
                 new UsersRVConfig().setUsersConfig(mUserRV, MainActivity.this, users);
@@ -46,27 +47,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        new FirebaseDatabaseHelper().readChores(new FirebaseDatabaseHelper.DataStatus() {
-            @Override
-            public void DataIsLoaded(List<Chore> chores, List<String> users) {
-//                new ChoresRVConfig().setChoresConfig(mRecyclerView, MainActivity.this, chores);
-            }
-
-            @Override
-            public void DataInserter() {
-
-            }
-
-            @Override
-            public void DataUpdated() {
-
-            }
-
-            @Override
-            public void DataDeleted() {
-
-            }
-        });
+//        mChoreRV = (RecyclerView) findViewById(R.id.choresRV);
+//        new FirebaseDatabaseHelper().readData(new FirebaseDatabaseHelper.DataStatus() {
+//            @Override
+//            public void DataIsLoaded(List<Chore> chores, List<User> users) {
+//                new ChoresRVConfig().setChoresConfig(mChoreRV, MainActivity.this, chores);
+//            }
+//
+//            @Override
+//            public void DataInserter() {
+//
+//            }
+//
+//            @Override
+//            public void DataUpdated() {
+//
+//            }
+//
+//            @Override
+//            public void DataDeleted() {
+//
+//            }
+//        });
 
 
 
