@@ -5,10 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -16,38 +19,38 @@ public class RecyclerViewConfig {
     private Context mContext;
 
     private ChoresAdapter mChoresAdapter;
-    public void setConfig(RecyclerView recyclerView, Context context, List<Chore> chores, List<String> keys){
+    public void setConfig(RecyclerView recyclerView, Context context, List<Chore> chores, List<String> users){
         mContext = context;
-        mChoresAdapter = new ChoresAdapter(chores, keys);
+        mChoresAdapter = new ChoresAdapter(chores, users);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(mChoresAdapter);
     }
 
     class ChoreItemView extends RecyclerView.ViewHolder{
         private CheckBox mCheckbox;
-
-        private String key;
+        private TextView mTextView;
 
         public ChoreItemView(ViewGroup parent) {
             super(LayoutInflater.from(mContext).inflate(R.layout.chore_item, parent, false));
 
             mCheckbox = (CheckBox) itemView.findViewById(R.id.itemCheckBox);
+            mTextView = (TextView) itemView.findViewById(R.id.userTV);
 
         }
 
-        public void bind(Chore chore, String key){
+        public void bind(Chore chore, String user){
             mCheckbox.setText(chore.getName());
-            this.key = key;
+            mTextView.setText(user);
         }
     }
 
     class ChoresAdapter extends RecyclerView.Adapter<ChoreItemView>{
         private List<Chore> mChoresList;
-        private List<String> mKeysList;
+        private List<String> mUsers;
 
-        public ChoresAdapter(List<Chore> mChoresList, List<String> mKeysList) {
+        public ChoresAdapter(List<Chore> mChoresList, List<String> mUsers) {
             this.mChoresList = mChoresList;
-            this.mKeysList = mKeysList;
+            this.mUsers = mUsers;
         }
 
         @NonNull
@@ -58,12 +61,13 @@ public class RecyclerViewConfig {
 
         @Override
         public void onBindViewHolder(@NonNull ChoreItemView holder, int position) {
-            holder.bind(mChoresList.get(position), mKeysList.get(position));
+            holder.bind(mChoresList.get(position), mUsers.get(position));
+            System.out.println("{}{}{} "+position);
         }
 
         @Override
         public int getItemCount() {
-            return mChoresList.size();
+            return mUsers.size();
         }
     }
 

@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewChores);
         new FirebaseDatabaseHelper().readChores(new FirebaseDatabaseHelper.DataStatus() {
             @Override
-            public void DataIsLoaded(List<Chore> chores, List<String> keys) {
-                new RecyclerViewConfig().setConfig(mRecyclerView, MainActivity.this, chores, keys);
+            public void DataIsLoaded(List<Chore> chores, List<String> users) {
+                new RecyclerViewConfig().setConfig(mRecyclerView, MainActivity.this, chores, users);
             }
 
             @Override
