@@ -2,55 +2,50 @@ package com.example.mydumbjavaapp;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
-public class RecyclerViewConfig {
+public class ChoresRVConfig {
     private Context mContext;
 
     private ChoresAdapter mChoresAdapter;
-    public void setConfig(RecyclerView recyclerView, Context context, List<Chore> chores, List<String> users){
+    public void setChoresConfig(RecyclerView recyclerView, Context context, List<Chore> chores){
         mContext = context;
-        mChoresAdapter = new ChoresAdapter(chores, users);
+        mChoresAdapter = new ChoresAdapter(chores);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(mChoresAdapter);
+        recyclerView.setAdapter(mChoresAdapter);//Sets the adapter
     }
 
+
+    //The View holder for the recyclerview
     class ChoreItemView extends RecyclerView.ViewHolder{
         private CheckBox mCheckbox;
-        private TextView mTextView;
 
         public ChoreItemView(ViewGroup parent) {
             super(LayoutInflater.from(mContext).inflate(R.layout.chore_item, parent, false));
-
             mCheckbox = (CheckBox) itemView.findViewById(R.id.itemCheckBox);
-            mTextView = (TextView) itemView.findViewById(R.id.userTV);
-
         }
 
-        public void bind(Chore chore, String user){
+        //displays info into the row layout(chore_item.xml)
+        public void bind(Chore chore){
             mCheckbox.setText(chore.getName());
-            mTextView.setText(user);
         }
     }
 
+    //The adapter class for the recyclerview
     class ChoresAdapter extends RecyclerView.Adapter<ChoreItemView>{
+        //private Activity activity;
         private List<Chore> mChoresList;
-        private List<String> mUsers;
+        private List<User> mUserList;
 
-        public ChoresAdapter(List<Chore> mChoresList, List<String> mUsers) {
+        public ChoresAdapter(List<Chore> mChoresList) {
             this.mChoresList = mChoresList;
-            this.mUsers = mUsers;
         }
 
         @NonNull
@@ -61,15 +56,13 @@ public class RecyclerViewConfig {
 
         @Override
         public void onBindViewHolder(@NonNull ChoreItemView holder, int position) {
-            holder.bind(mChoresList.get(position), mUsers.get(position));
-            System.out.println("{}{}{} "+position);
+            holder.bind(mChoresList.get(position));//This will get the Chore object from the array and use the bind method to display it on the row layout(chore_item.xml)
         }
 
         @Override
         public int getItemCount() {
-            return mUsers.size();
+            return mChoresList.size();
         }
     }
-
 
 }

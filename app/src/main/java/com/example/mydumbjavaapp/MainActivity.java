@@ -7,13 +7,12 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.time.LocalDate;
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView mRecyclerView;
+    private RecyclerView mUserRV;
 //    private LocalDate date;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -24,11 +23,33 @@ public class MainActivity extends AppCompatActivity {
 
 //        date = LocalDate.now();
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewChores);
+        mUserRV = (RecyclerView) findViewById(R.id.usersRecyclerView);
+        new FirebaseDatabaseHelper().readUsers(new FirebaseDatabaseHelper.DataStatus() {
+            @Override
+            public void DataIsLoaded(List<Chore> chores, List<User> users) {
+                new UsersRVConfig().setUsersConfig(mUserRV, MainActivity.this, users);
+            }
+
+            @Override
+            public void DataInserter() {
+
+            }
+
+            @Override
+            public void DataUpdated() {
+
+            }
+
+            @Override
+            public void DataDeleted() {
+
+            }
+        });
+
         new FirebaseDatabaseHelper().readChores(new FirebaseDatabaseHelper.DataStatus() {
             @Override
             public void DataIsLoaded(List<Chore> chores, List<String> users) {
-                new RecyclerViewConfig().setConfig(mRecyclerView, MainActivity.this, chores, users);
+//                new ChoresRVConfig().setChoresConfig(mRecyclerView, MainActivity.this, chores);
             }
 
             @Override
