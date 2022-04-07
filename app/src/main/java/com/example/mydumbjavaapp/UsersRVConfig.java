@@ -3,7 +3,6 @@ package com.example.mydumbjavaapp;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,15 +26,21 @@ public class UsersRVConfig {
     //The View holder for the recyclerview
     class UserItemView extends RecyclerView.ViewHolder{
         private TextView mUserName;
+        private RecyclerView choresRV;
 
         public UserItemView(ViewGroup parent) {
             super(LayoutInflater.from(mContext).inflate(R.layout.user_item, parent, false));
             mUserName = (TextView) itemView.findViewById(R.id.userNameTV);
+            choresRV = (RecyclerView) itemView.findViewById(R.id.choresRV);
         }
 
         //displays info into the row layout(chore_item.xml)
         public void bind(User user){
             mUserName.setText(user.getName());
+
+            //Calls upon the chores rv config to print data
+            ChoresRVConfig mChoresRVConfig = new ChoresRVConfig();
+            mChoresRVConfig.setChoresConfig(choresRV,mContext, user.getChoreList());
         }
     }
 
