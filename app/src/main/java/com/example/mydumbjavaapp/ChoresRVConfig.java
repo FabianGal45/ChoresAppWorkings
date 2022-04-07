@@ -19,7 +19,7 @@ public class ChoresRVConfig {
         mContext = context;
         mChoresAdapter = new ChoresAdapter(chores);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(mChoresAdapter);//Sets the adapter
+        recyclerView.setAdapter(mChoresAdapter);
     }
 
 
@@ -38,11 +38,10 @@ public class ChoresRVConfig {
         }
     }
 
+
     //The adapter class for the recyclerview
     class ChoresAdapter extends RecyclerView.Adapter<ChoreItemView>{
-        //private Activity activity;
         private List<Chore> mChoresList;
-        private List<User> mUserList;
 
         public ChoresAdapter(List<Chore> mChoresList) {
             this.mChoresList = mChoresList;

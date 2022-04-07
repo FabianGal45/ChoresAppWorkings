@@ -47,29 +47,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        mChoreRV = (RecyclerView) findViewById(R.id.choresRV);
-//        new FirebaseDatabaseHelper().readData(new FirebaseDatabaseHelper.DataStatus() {
-//            @Override
-//            public void DataIsLoaded(List<Chore> chores, List<User> users) {
-//                new ChoresRVConfig().setChoresConfig(mChoreRV, MainActivity.this, chores);
-//            }
-//
-//            @Override
-//            public void DataInserter() {
-//
-//            }
-//
-//            @Override
-//            public void DataUpdated() {
-//
-//            }
-//
-//            @Override
-//            public void DataDeleted() {
-//
-//            }
-//        });
-
 
 
 
