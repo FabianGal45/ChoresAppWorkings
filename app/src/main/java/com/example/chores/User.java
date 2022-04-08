@@ -1,4 +1,4 @@
-package com.example.mydumbjavaapp;
+package com.example.chores;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +26,16 @@ public class User {
         }
     }
 
-    //I realized that when data wipes from the array of chores in the database helper they wipe in here too. Because of that, I have created this method.
+    //I realized that when data wipes from the array of chores in the database helper they wipe in here too. Because of that, I have created this method which allows the program to add a chore.
     public void addToChores(Chore chore){
         choreList.add(chore);
+    }
+
+    //This method is used to get the chores from the priority queue.
+    public void setChoreList(ArrayList<Chore> choreArrayList){
+        for(Chore chore:choreArrayList){
+            addToChores(chore);
+        }
     }
 
 

@@ -1,9 +1,9 @@
-package com.example.mydumbjavaapp;
+package com.example.chores;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.google.firebase.database.ChildEventListener;
+import com.example.chores.pq.MyPriorityQueue;
+import com.example.chores.pq.PQInterface;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,6 +17,7 @@ public class FirebaseDatabaseHelper {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     private List<User> users = new ArrayList<>();
+
 
     public interface DataStatus{
         void DataIsLoaded(List<User> users);
@@ -41,15 +42,19 @@ public class FirebaseDatabaseHelper {
                 for(DataSnapshot UserNode : snapshot.getChildren()){
                     System.out.println("### "+UserNode.getKey());
                     User user = new User();
+                    PQInterface mPQ = new MyPriorityQueue();//Creates instance of the priority queue. I need a new priority queue for each user to only stores one users chores.
                     user.setName(UserNode.getKey());//Gets the key of the reference e.g Fabian, James, Mark
                     users.add(user); //Adds to the user list
 
                     //loops through all the child nodes of the users to grab all the chores of the user.
                     for(DataSnapshot keyNode : snapshot.child(UserNode.getKey()).getChildren()){
-                        Chore chore = keyNode.getValue(Chore.class);
-                        user.addToChores(chore);
+                        Chore chore = keyNode.getValue(Chore.class);//creates a new chore object for each user.
+                        long priority = (long) keyNode.child("priority").getValue();//gets the priority of the chore.
+                        mPQ.enqueue((int)priority, chore);//Adds the chore and the priority to the priority queue to be arranged.
                         System.out.println("###> chores: "+keyNode.getKey()+" > "+ keyNode.getValue());
                     }
+
+                    user.setChoreList((ArrayList<Chore>) mPQ.getChores());//sets the list of chores with the chores that have been arranged based on their priority.
                 }
                 dataStatus.DataIsLoaded(users);
             }

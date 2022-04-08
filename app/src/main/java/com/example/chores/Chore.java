@@ -1,6 +1,4 @@
-package com.example.mydumbjavaapp;
-
-import java.time.LocalDate;
+package com.example.chores;
 
 public class Chore {
     private String name;

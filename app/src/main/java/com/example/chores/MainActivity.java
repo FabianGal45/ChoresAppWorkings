@@ -1,4 +1,4 @@
-package com.example.mydumbjavaapp;
+package com.example.chores;
 
 import android.os.Build;
 import android.os.Bundle;

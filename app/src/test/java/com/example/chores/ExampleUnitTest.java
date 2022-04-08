@@ -1,4 +1,4 @@
-package com.example.mydumbjavaapp;
+package com.example.chores;
 
 import org.junit.Test;
 
