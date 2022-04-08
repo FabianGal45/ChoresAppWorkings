@@ -49,11 +49,10 @@ public class FirebaseDatabaseHelper {
                     //loops through all the child nodes of the users to grab all the chores of the user.
                     for(DataSnapshot keyNode : snapshot.child(UserNode.getKey()).getChildren()){
                         Chore chore = keyNode.getValue(Chore.class);//creates a new chore object for each user.
-                        long priority = (long) keyNode.child("priority").getValue();//gets the priority of the chore.
-                        mPQ.enqueue((int)priority, chore);//Adds the chore and the priority to the priority queue to be arranged.
+                        int priority = (int)(long) keyNode.child("priority").getValue();//gets the priority of the chore. It originally comes as an object which it didn't like being parsed in an int so I first parsed it as a long.
+                        mPQ.enqueue(priority, chore);//Adds the chore and the priority to the priority queue to be arranged.
                         System.out.println("###> chores: "+keyNode.getKey()+" > "+ keyNode.getValue());
                     }
-
                     user.setChoreList((ArrayList<Chore>) mPQ.getChores());//sets the list of chores with the chores that have been arranged based on their priority.
                 }
                 dataStatus.DataIsLoaded(users);
