@@ -1,4 +1,4 @@
-package com.example.chores;
+package com.example.choresapp;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 //        date = LocalDate.now();
+
+        System.out.println("THIS IS A TESTTTTTTTTTTTTT TT T T T T TT T  T TT ");
 
         mUserRV = (RecyclerView) findViewById(R.id.usersRecyclerView);
         new FirebaseDatabaseHelper().readData(new FirebaseDatabaseHelper.DataStatus() {

@@ -1,9 +1,9 @@
-package com.example.chores;
+package com.example.choresapp;
 
 import androidx.annotation.NonNull;
 
-import com.example.chores.pq.MyPriorityQueue;
-import com.example.chores.pq.PQInterface;
+import com.example.choresapp.pq.MyPriorityQueue;
+import com.example.choresapp.pq.PQInterface;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +28,7 @@ public class FirebaseDatabaseHelper {
 
     //UPDATE: Changing the database structure to get the usernames first then the keys
     public FirebaseDatabaseHelper(){
-        mDatabase = FirebaseDatabase.getInstance("https://mydumbjavaapp-default-rtdb.europe-west1.firebasedatabase.app/");
+        mDatabase = FirebaseDatabase.getInstance("https://choresapp-bcec5-default-rtdb.europe-west1.firebasedatabase.app/");
         mReference = mDatabase.getReference("chores");
     }
 

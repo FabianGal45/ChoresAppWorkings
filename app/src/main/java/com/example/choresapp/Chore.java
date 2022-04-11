@@ -1,4 +1,4 @@
-package com.example.chores;
+package com.example.choresapp;
 
 public class Chore {
     private String name;

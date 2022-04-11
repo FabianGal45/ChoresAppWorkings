@@ -1,4 +1,4 @@
-package com.example.chores.pq;
+package com.example.choresapp.pq;
 
 public interface PQInterface {
     public void enqueue(int key, Object element);

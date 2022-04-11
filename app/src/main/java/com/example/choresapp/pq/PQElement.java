@@ -1,6 +1,6 @@
-package com.example.chores.pq;
+package com.example.choresapp.pq;
 
-import com.example.chores.Chore;
+import com.example.choresapp.Chore;
 
 public class PQElement {
     private int key;

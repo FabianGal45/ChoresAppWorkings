@@ -1,4 +1,4 @@
-package com.example.chores;
+package com.example.choresapp;
 
 import android.content.Context;
 
