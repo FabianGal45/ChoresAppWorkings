@@ -1,11 +1,16 @@
 package com.example.choresapp;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -14,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mUserRV;
     private RecyclerView mChoreRV;
+    private FloatingActionButton mAddChoreFAB;
 //    private LocalDate date;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -23,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 //        date = LocalDate.now();
-
-        System.out.println("THIS IS A TESTTTTTTTTTTTTT TT T T T T TT T  T TT ");
 
         mUserRV = (RecyclerView) findViewById(R.id.usersRecyclerView);
         new FirebaseDatabaseHelper().readData(new FirebaseDatabaseHelper.DataStatus() {
@@ -51,7 +55,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        mAddChoreFAB = (FloatingActionButton) findViewById(R.id.addChoresFAB);
 
+        mAddChoreFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AddChore.class);
+                startActivity(intent);
+            }
+        });
 
 /*
         This runs when clicking the big button
