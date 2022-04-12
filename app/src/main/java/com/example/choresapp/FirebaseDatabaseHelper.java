@@ -19,7 +19,6 @@ public class FirebaseDatabaseHelper {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     private List<User> users = new ArrayList<>();
-    private long maxID;
 
     public interface DataStatus{
         void DataIsLoaded(List<User> users);
@@ -30,8 +29,8 @@ public class FirebaseDatabaseHelper {
 
     //UPDATE: Changing the database structure to get the usernames first then the keys
     public FirebaseDatabaseHelper(){
-        mDatabase = FirebaseDatabase.getInstance("https://choresapp-bcec5-default-rtdb.europe-west1.firebasedatabase.app/");
-        mReference = mDatabase.getReference("chores");
+        mDatabase = FirebaseDatabase.getInstance("https://houseshare-2ddd0-default-rtdb.europe-west1.firebasedatabase.app/");
+        mReference = mDatabase.getReference("House/Chores");
     }
 
     public void readData(final DataStatus dataStatus){
@@ -49,10 +48,12 @@ public class FirebaseDatabaseHelper {
                     users.add(user); //Adds to the user list
 
                     for(DataSnapshot keyNode : snapshot.child(UserNode.getKey()).getChildren()){//loops through all the child nodes of the users to grab all the chores of the user.
-                        Chore chore = keyNode.getValue(Chore.class);//creates a new chore object for each user.
-                        int priority = keyNode.child("priority").getValue(Integer.class);//gets the priority of the chore.
-                        mPQ.enqueue(priority, chore);//Adds the chore and the priority to the priority queue to be arranged.
-                        System.out.println("###> chores: "+keyNode.getKey()+" > "+ keyNode.getValue());
+                        if(keyNode.child("priority").exists() && keyNode.child("date").exists() && keyNode.child("date").exists()){//checks to see if the chore the necessary children. Used to prevent the app from crashing.
+                            Chore chore = keyNode.getValue(Chore.class);//creates a new chore object for each user.
+                            int priority = keyNode.child("priority").getValue(Integer.class);//gets the priority of the chore.
+                            mPQ.enqueue(priority, chore);//Adds the chore and the priority to the priority queue to be arranged.
+                            System.out.println("###> chores: "+keyNode.getKey()+" > "+ keyNode.getValue());
+                        }
                     }
                     user.setChoreList((ArrayList<Chore>) mPQ.getChores());//sets the list of chores with the chores that have been arranged based on their priority.
                 }
