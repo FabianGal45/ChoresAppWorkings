@@ -1,0 +1,97 @@
+package com.example.choresapp;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+
+import java.time.LocalDate;
+
+public class UpdateChoreActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+
+    private Button mUpdateBtn;
+    private Button mCancelBtn;
+    private EditText mChoreName;
+    private int mChorePriority;
+    private LocalDate newDate;
+
+    private String oldName;
+    private String oldPriority;
+    private String oldDate;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_update_chore);
+
+        oldName = getIntent().getStringExtra("name");
+        oldPriority = getIntent().getStringExtra("priority");
+        oldDate = getIntent().getStringExtra("date");
+
+        mChoreName = (EditText) findViewById(R.id.choreNameED);
+        newDate = LocalDate.now();
+
+        mCancelBtn = (Button) findViewById(R.id.cancelBtn);
+        mUpdateBtn = (Button) findViewById(R.id.updateChoreBtn);
+
+        //Spinner setup
+        Spinner prioritySpinner = findViewById(R.id.prioritySpinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.prioritySpinner, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        prioritySpinner.setAdapter(adapter);
+        prioritySpinner.setOnItemSelectedListener(this);
+//        prioritySpinner.setSelection(getIndexSpinnerItem(prioritySpinner));
+
+        mUpdateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Chore chore = new Chore();//TODO: complete tutorial from here
+            }
+        });
+
+    }
+
+
+
+    private int getIndexSpinnerItem(Spinner spinner){
+        int index = 0;
+        for(int i=0; i<spinner.getCount(); i++){
+            System.out.println("YYYY> Bottom: "+ spinner.getBottom()+", Baseline: "+spinner.getBaseline());
+//            if(spinner.getItemAtPosition(i).equals(item)){
+//                index = i;
+//                break;
+//            }
+        }
+        return index;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        if(i==0){
+            mChorePriority = 10;
+        }else if(i==1){
+            mChorePriority = 9;
+        }else if(i==2){
+            mChorePriority = 8;
+        }else if(i==3){
+            mChorePriority = 7;
+        }else if(i==4){
+            mChorePriority = 6;
+        }else if(i==5){
+            mChorePriority = 5;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+}

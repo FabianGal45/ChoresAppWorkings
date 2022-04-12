@@ -3,6 +3,8 @@ package com.example.choresapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,8 +17,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mUserRV;
-    private RecyclerView mChoreRV;
     private FloatingActionButton mAddChoreFAB;
+    private CheckBox mCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+//        mCheckBox = (CheckBox) findViewById(R.id.itemCheckBox);
+//
+//        mCheckBox.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View view) {
+//                Toast.makeText(MainActivity.this, "YOOOOO!", Toast.LENGTH_SHORT).show();
+//                return false;
+//            }
+//        });
+
 
 /*
         This runs when clicking the big button

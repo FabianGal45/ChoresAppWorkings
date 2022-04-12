@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyDumbJavaApp">
         <activity
+            android:name=".UpdateChoreActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddChoreActivity"
             android:exported="false" />
         <activity

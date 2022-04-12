@@ -79,5 +79,24 @@ public class FirebaseDatabaseHelper {
 
     }
 
+    public void updateChore(String user,String key, Chore chore, final DataStatus dataStatus){
+        mReference.child(user).child(key).setValue(chore).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                dataStatus.DataUpdated();
+            }
+        });
+    }
+
+    public void deleteChore(String user, String key, final DataStatus dataStatus){
+        mReference.child(user).child(key).setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                dataStatus.DataDeleted();
+            }
+        });
+
+    }
+
 
 }

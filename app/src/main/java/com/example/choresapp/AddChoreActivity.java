@@ -34,7 +34,7 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
         date = LocalDate.now();
 
         mCancelBtn = (Button) findViewById(R.id.cancelBtn);
-        mAddBtn = (Button) findViewById(R.id.addChoreBtn);
+        mAddBtn = (Button) findViewById(R.id.updateChoreBtn);
 
         //Spinner setup
         Spinner prioritySpinner = findViewById(R.id.prioritySpinner);
