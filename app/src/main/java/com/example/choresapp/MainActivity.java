@@ -1,12 +1,9 @@
 package com.example.choresapp;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void DataInserter() {
+            public void DataIsInserted() {
 
             }
 
@@ -57,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         mAddChoreFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddChore.class);
+                Intent intent = new Intent(MainActivity.this, AddChoreActivity.class);
                 startActivity(intent);
             }
         });

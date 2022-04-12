@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.example.choresapp.pq.MyPriorityQueue;
 import com.example.choresapp.pq.PQInterface;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,7 +23,7 @@ public class FirebaseDatabaseHelper {
 
     public interface DataStatus{
         void DataIsLoaded(List<User> users);
-        void DataInserter();
+        void DataIsInserted();
         void DataUpdated();
         void DataDeleted();
     }
@@ -39,16 +40,15 @@ public class FirebaseDatabaseHelper {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 users.clear();//Clears the previous users from the list to replace them with the new ones
                 System.out.println("##Clear<>");
-                //Loops through all the children (users) of the chores parent in the database.
-                for(DataSnapshot UserNode : snapshot.getChildren()){
+
+                for(DataSnapshot UserNode : snapshot.getChildren()){//Loops through all the children (users) of the chores parent in the database.
                     System.out.println("### "+UserNode.getKey());
                     User user = new User();
                     PQInterface mPQ = new MyPriorityQueue();//Creates instance of the priority queue. I need a new priority queue for each user to only stores one users chores.
                     user.setName(UserNode.getKey());//Gets the key of the reference e.g Fabian, James, Mark
                     users.add(user); //Adds to the user list
 
-                    //loops through all the child nodes of the users to grab all the chores of the user.
-                    for(DataSnapshot keyNode : snapshot.child(UserNode.getKey()).getChildren()){
+                    for(DataSnapshot keyNode : snapshot.child(UserNode.getKey()).getChildren()){//loops through all the child nodes of the users to grab all the chores of the user.
                         Chore chore = keyNode.getValue(Chore.class);//creates a new chore object for each user.
                         int priority = keyNode.child("priority").getValue(Integer.class);//gets the priority of the chore.
                         mPQ.enqueue(priority, chore);//Adds the chore and the priority to the priority queue to be arranged.
@@ -67,26 +67,16 @@ public class FirebaseDatabaseHelper {
         });
     }
 
-    public void setChore(String user, Chore chore){
-        mReference.addValueEventListener(new ValueEventListener() {
+    public void addChore(String user, Chore chore, final DataStatus dataStatus){
+        String key = mReference.child(user).push().getKey();
+        mReference.child(user).child(key).setValue(chore).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                System.out.println("maxID>> "+snapshot.child(user).getChildrenCount());
-                maxID=snapshot.child(user).getChildrenCount();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            public void onSuccess(Void unused) {
+                dataStatus.DataIsInserted();
             }
         });
-        System.out.println("maxID>> "+maxID);
-        mReference.child(user).child(String.valueOf(maxID+12)).setValue(chore);
-        System.out.println("maxID>> "+maxID+1);
 
     }
-
-
 
 
 }

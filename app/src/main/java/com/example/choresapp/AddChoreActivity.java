@@ -11,23 +11,18 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class AddChore extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AddChoreActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private Button mAddBtn;
     private Button mCancelBtn;
     private EditText mChoreName;
     private int mChorePriority;
     private LocalDate date;
-
-    public void test(List<User> users){
-
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -51,11 +46,30 @@ public class AddChore extends AppCompatActivity implements AdapterView.OnItemSel
         mAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("TESTING>> "+mChoreName);
-//                Toast.makeText(view.getContext(),String.valueOf(mChoreName)+ " was set!!",Toast.LENGTH_SHORT).show();
-                Chore chore = new Chore(mChoreName.getText().toString(),mChorePriority,date.toString());
-                new FirebaseDatabaseHelper().setChore("Fabian", chore);
+                Chore chore = new Chore(mChoreName.getText().toString(),mChorePriority,date.toString());//Creates the new chore with the values in the current activity.
+                new FirebaseDatabaseHelper().addChore("Fabian",chore, new FirebaseDatabaseHelper.DataStatus() {
+                    @Override
+                    public void DataIsLoaded(List<User> users) {
+
+                    }
+
+                    @Override
+                    public void DataIsInserted() {
+                        Toast.makeText(AddChoreActivity.this,"Chore successfully added!",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void DataUpdated() {
+
+                    }
+
+                    @Override
+                    public void DataDeleted() {
+
+                    }
+                });
                 finish();
+                return;
             }
         });
 
@@ -63,6 +77,7 @@ public class AddChore extends AppCompatActivity implements AdapterView.OnItemSel
             @Override
             public void onClick(View view) {
                 finish();
+                return;//stop executing anything else
             }
         });
     }
