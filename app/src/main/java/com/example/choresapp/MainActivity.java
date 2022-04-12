@@ -20,15 +20,11 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mUserRV;
     private RecyclerView mChoreRV;
     private FloatingActionButton mAddChoreFAB;
-//    private LocalDate date;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        date = LocalDate.now();
 
         mUserRV = (RecyclerView) findViewById(R.id.usersRecyclerView);
         new FirebaseDatabaseHelper().readData(new FirebaseDatabaseHelper.DataStatus() {

@@ -8,6 +8,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -64,6 +65,36 @@ public class FirebaseDatabaseHelper {
             }
         });
     }
+
+    public int getLastChoreIDForUser(String user){
+        ArrayList<String> keys = new ArrayList<>();
+        int test;
+        mReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot keyNode : snapshot.child(user).getChildren()){
+                    keys.add(keyNode.getKey());
+                    System.out.println("###> chores: "+keyNode.getKey()+" > "+ keyNode.getValue());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        return keys.size();
+    }
+
+    public void setChore(String user, Chore chore){
+        int ID = 0;
+        getLastChoreIDForUser(user);
+        System.out.println("###> ID: "+id);
+    }
+
+
 
 
 }
