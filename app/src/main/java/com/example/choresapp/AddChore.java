@@ -45,7 +45,7 @@ public class AddChore extends AppCompatActivity implements AdapterView.OnItemSel
             @Override
             public void onClick(View view) {
                 Chore chore = new Chore(mChoreName,mChorePriority,date.toString());
-                new FirebaseDatabaseHelper().setChore("Fabian", chore);
+                new FirebaseDatabaseHelper().setChore("Mark", chore);
             }
         });
 

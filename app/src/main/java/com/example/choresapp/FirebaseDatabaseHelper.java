@@ -68,30 +68,22 @@ public class FirebaseDatabaseHelper {
 
     public int getLastChoreIDForUser(String user){
         ArrayList<String> keys = new ArrayList<>();
-        int test;
-        mReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot keyNode : snapshot.child(user).getChildren()){
-                    keys.add(keyNode.getKey());
-                    System.out.println("###> chores: "+keyNode.getKey()+" > "+ keyNode.getValue());
-                }
+        int choresSize = 0;
 
+        for(int i=0;i<users.size();i++){
+            User curUser = users.get(i);
+            if(curUser.getName().equals(user)){
+                choresSize = curUser.getChoreList().size();
             }
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        return keys.size();
+        return choresSize;
     }
 
     public void setChore(String user, Chore chore){
         int ID = 0;
-        getLastChoreIDForUser(user);
-        System.out.println("###> ID: "+id);
+        int size = getLastChoreIDForUser(user);
+        System.out.println("###> ID: "+size);
     }
 
 
