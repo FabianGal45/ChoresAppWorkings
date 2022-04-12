@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
         mAddChoreFAB = (FloatingActionButton) findViewById(R.id.addChoresFAB);
 
         mAddChoreFAB.setOnClickListener(new View.OnClickListener() {

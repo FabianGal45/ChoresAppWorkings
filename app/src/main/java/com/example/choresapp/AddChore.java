@@ -9,19 +9,25 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class AddChore extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private Button mAddBtn;
     private Button mCancelBtn;
-    private String mChoreName;
+    private EditText mChoreName;
     private int mChorePriority;
     private LocalDate date;
 
+    public void test(List<User> users){
+
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -29,10 +35,11 @@ public class AddChore extends AppCompatActivity implements AdapterView.OnItemSel
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_chore);
 
+        mChoreName = (EditText) findViewById(R.id.choreNameED);
+        date = LocalDate.now();
+
         mCancelBtn = (Button) findViewById(R.id.cancelBtn);
         mAddBtn = (Button) findViewById(R.id.addChoreBtn);
-        mChoreName = findViewById(R.id.choreNameED).toString();
-        date = LocalDate.now();
 
         //Spinner setup
         Spinner prioritySpinner = findViewById(R.id.prioritySpinner);
@@ -44,8 +51,11 @@ public class AddChore extends AppCompatActivity implements AdapterView.OnItemSel
         mAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Chore chore = new Chore(mChoreName,mChorePriority,date.toString());
-                new FirebaseDatabaseHelper().setChore("Mark", chore);
+                System.out.println("TESTING>> "+mChoreName);
+//                Toast.makeText(view.getContext(),String.valueOf(mChoreName)+ " was set!!",Toast.LENGTH_SHORT).show();
+                Chore chore = new Chore(mChoreName.getText().toString(),mChorePriority,date.toString());
+                new FirebaseDatabaseHelper().setChore("Fabian", chore);
+                finish();
             }
         });
 
@@ -73,8 +83,7 @@ public class AddChore extends AppCompatActivity implements AdapterView.OnItemSel
         }else if(i==5){
             mChorePriority = 5;
         }
-
-        Toast.makeText(adapterView.getContext(),String.valueOf(mChorePriority),Toast.LENGTH_SHORT).show();
+//        Toast.makeText(adapterView.getContext(),String.valueOf(mChorePriority),Toast.LENGTH_SHORT).show();
     }
 
     @Override

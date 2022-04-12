@@ -18,7 +18,7 @@ public class FirebaseDatabaseHelper {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     private List<User> users = new ArrayList<>();
-
+    private long maxID;
 
     public interface DataStatus{
         void DataIsLoaded(List<User> users);
@@ -38,7 +38,7 @@ public class FirebaseDatabaseHelper {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 users.clear();//Clears the previous users from the list to replace them with the new ones
-
+                System.out.println("##Clear<>");
                 //Loops through all the children (users) of the chores parent in the database.
                 for(DataSnapshot UserNode : snapshot.getChildren()){
                     System.out.println("### "+UserNode.getKey());
@@ -57,6 +57,7 @@ public class FirebaseDatabaseHelper {
                     user.setChoreList((ArrayList<Chore>) mPQ.getChores());//sets the list of chores with the chores that have been arranged based on their priority.
                 }
                 dataStatus.DataIsLoaded(users);
+
             }
 
             @Override
@@ -66,24 +67,23 @@ public class FirebaseDatabaseHelper {
         });
     }
 
-    public int getLastChoreIDForUser(String user){
-        ArrayList<String> keys = new ArrayList<>();
-        int choresSize = 0;
-
-        for(int i=0;i<users.size();i++){
-            User curUser = users.get(i);
-            if(curUser.getName().equals(user)){
-                choresSize = curUser.getChoreList().size();
-            }
-        }
-
-        return choresSize;
-    }
-
     public void setChore(String user, Chore chore){
-        int ID = 0;
-        int size = getLastChoreIDForUser(user);
-        System.out.println("###> ID: "+size);
+        mReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                System.out.println("maxID>> "+snapshot.child(user).getChildrenCount());
+                maxID=snapshot.child(user).getChildrenCount();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        System.out.println("maxID>> "+maxID);
+        mReference.child(user).child(String.valueOf(maxID+12)).setValue(chore);
+        System.out.println("maxID>> "+maxID+1);
+
     }
 
 
