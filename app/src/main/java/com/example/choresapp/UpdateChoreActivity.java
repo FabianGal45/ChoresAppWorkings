@@ -39,6 +39,7 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
         oldDate = getIntent().getStringExtra("date");
 
         mChoreName = (EditText) findViewById(R.id.choreNameED);
+        mChoreName.setText(oldName);
         newDate = LocalDate.now();
 
         mCancelBtn = (Button) findViewById(R.id.cancelBtn);
@@ -81,6 +82,13 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
 
                     }
                 });
+            }
+        });
+
+        mCancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();return;
             }
         });
 

@@ -39,6 +39,12 @@ public class ChoresRVConfig {
                 @Override
                 public boolean onLongClick(View view) {
                     Toast.makeText(mContext, "I am a chore!", Toast.LENGTH_SHORT).show();
+                    System.out.println("INTENT THING> "+chore.getName());
+                    Intent intent = new Intent(mContext, UpdateChoreActivity.class);
+                    intent.putExtra("name", chore.getName()); //these putExtra methods are sending over the following values into the updateChoreActivity to be displayed.
+                    intent.putExtra("priority", Integer.toString(chore.getPriority()));
+                    intent.putExtra("date", chore.getDate());
+                    mContext.startActivity(intent);
                     return false;
                 }
             });
@@ -46,12 +52,7 @@ public class ChoresRVConfig {
             mCheckbox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    System.out.println("INTENT THING> "+chore.getName());
-                    Intent intent = new Intent(mContext, UpdateChoreActivity.class);
-                    intent.putExtra("name", chore.getName()); //these putExtra methods are sending over the following values into the updateChoreActivity to be displayed.
-                    intent.putExtra("priority", Integer.toString(chore.getPriority()));
-                    intent.putExtra("date", chore.getDate());
-                    mContext.startActivity(intent);
+                    Toast.makeText(mContext, "I should have been deleted now", Toast.LENGTH_SHORT).show();
                 }
             });
         }
