@@ -11,8 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class UpdateChoreActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -54,6 +56,31 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
             @Override
             public void onClick(View view) {
                 Chore chore = new Chore();//TODO: complete tutorial from here
+                chore.setDate(newDate.toString());
+                chore.setName(mChoreName.toString());
+                chore.setPriority(mChorePriority);
+
+                new FirebaseDatabaseHelper().updateChore("Fabian", "8", chore, new FirebaseDatabaseHelper.DataStatus() {//TODO make sure to grab the actual values of the user and key.
+                    @Override
+                    public void DataIsLoaded(List<User> users) {
+
+                    }
+
+                    @Override
+                    public void DataIsInserted() {
+
+                    }
+
+                    @Override
+                    public void DataUpdated() {
+                        Toast.makeText(UpdateChoreActivity.this, "Chore has been successfully updated", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void DataDeleted() {
+
+                    }
+                });
             }
         });
 
