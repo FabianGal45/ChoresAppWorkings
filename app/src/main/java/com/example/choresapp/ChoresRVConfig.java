@@ -52,7 +52,30 @@ public class ChoresRVConfig {
             mCheckbox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(mContext, "I should have been deleted now", Toast.LENGTH_SHORT).show();
+                    if(mCheckbox.isChecked()){
+                        Toast.makeText(mContext, "I should have been deleted now", Toast.LENGTH_SHORT).show();
+                        new FirebaseDatabaseHelper().deleteChore("James", "aa", new FirebaseDatabaseHelper.DataStatus() {//TODO: make sure the user and key are correct
+                            @Override
+                            public void DataIsLoaded(List<User> users) {
+
+                            }
+
+                            @Override
+                            public void DataIsInserted() {
+
+                            }
+
+                            @Override
+                            public void DataUpdated() {
+
+                            }
+
+                            @Override
+                            public void DataDeleted() {
+                                Toast.makeText(mContext, "Chore successfully deleted", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                 }
             });
         }
