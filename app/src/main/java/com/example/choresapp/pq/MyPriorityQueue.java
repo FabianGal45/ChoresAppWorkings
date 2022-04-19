@@ -1,6 +1,7 @@
 package com.example.choresapp.pq;
 
 import com.example.choresapp.Chore;
+import com.example.choresapp.ChoreWithID;
 
 import java.util.ArrayList;
 
@@ -33,7 +34,7 @@ public class MyPriorityQueue implements PQInterface{
     public void enqueue(int key, Object element) {
         int index;
 
-        PQElement elem = new PQElement(key, (Chore) element);
+        PQElement elem = new PQElement(key, (ChoreWithID) element);
 
         index = findInsertPosition(key);
 
@@ -65,8 +66,8 @@ public class MyPriorityQueue implements PQInterface{
     }
 
     @Override
-    public ArrayList<Chore> getChores() {//Returns an array list of organised chores by their priority
-        ArrayList<Chore> chores = new ArrayList<>();
+    public ArrayList<ChoreWithID> getChores() {//Returns an array list of organised chores by their priority
+        ArrayList<ChoreWithID> chores = new ArrayList<>();
         for (int i = 0; i<thePQueue.size();i++) {
             chores.add(thePQueue.get(i).getChore());
         }

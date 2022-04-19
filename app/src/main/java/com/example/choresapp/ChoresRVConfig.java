@@ -18,7 +18,7 @@ public class ChoresRVConfig {
     private Context mContext;
 
     private ChoresAdapter mChoresAdapter;
-    public void setChoresConfig(RecyclerView recyclerView, Context context, List<Chore> chores){
+    public void setChoresConfig(RecyclerView recyclerView, Context context, List<ChoreWithID> chores){
         mContext = context;
         mChoresAdapter = new ChoresAdapter(chores);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -29,7 +29,7 @@ public class ChoresRVConfig {
     //The View holder for the recyclerview
     class ChoreItemView extends RecyclerView.ViewHolder{
         private CheckBox mCheckbox;
-        private Chore chore;//holds the chore object
+        private ChoreWithID chore;//holds the chore object
 
         public ChoreItemView(ViewGroup parent) {
             super(LayoutInflater.from(mContext).inflate(R.layout.chore_item, parent, false));
@@ -44,6 +44,7 @@ public class ChoresRVConfig {
                     intent.putExtra("name", chore.getName()); //these putExtra methods are sending over the following values into the updateChoreActivity to be displayed.
                     intent.putExtra("priority", Integer.toString(chore.getPriority()));
                     intent.putExtra("date", chore.getDate());
+                    intent.putExtra("id", chore.getId());
                     mContext.startActivity(intent);
                     return false;
                 }
@@ -54,7 +55,7 @@ public class ChoresRVConfig {
                 public void onClick(View view) {
                     if(mCheckbox.isChecked()){
                         Toast.makeText(mContext, "I should have been deleted now", Toast.LENGTH_SHORT).show();
-                        new FirebaseDatabaseHelper().deleteChore("James", "aa", new FirebaseDatabaseHelper.DataStatus() {//TODO: make sure the user and key are correct
+                        new FirebaseDatabaseHelper().deleteChore("userID", chore.getId(), new FirebaseDatabaseHelper.DataStatus() {//TODO: make sure the user and key are correct
                             @Override
                             public void DataIsLoaded(List<User> users) {
 
@@ -81,7 +82,7 @@ public class ChoresRVConfig {
         }
 
         //displays info into the row layout(chore_item.xml)
-        public void bind(Chore chore){
+        public void bind(ChoreWithID chore){
             mCheckbox.setText(chore.getName());
             this.chore=chore;
         }
@@ -91,9 +92,9 @@ public class ChoresRVConfig {
 
     //The adapter class for the recyclerview
     class ChoresAdapter extends RecyclerView.Adapter<ChoreItemView>{
-        private List<Chore> mChoresList;
+        private List<ChoreWithID> mChoresList;
 
-        public ChoresAdapter(List<Chore> mChoresList) {
+        public ChoresAdapter(List<ChoreWithID> mChoresList) {
             this.mChoresList = mChoresList;
         }
 

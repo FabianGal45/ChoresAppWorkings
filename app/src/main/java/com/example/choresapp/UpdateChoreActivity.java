@@ -27,6 +27,7 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
     private String oldName;
     private String oldPriority;
     private String oldDate;
+    private String choreID;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -37,6 +38,8 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
         oldName = getIntent().getStringExtra("name");
         oldPriority = getIntent().getStringExtra("priority");
         oldDate = getIntent().getStringExtra("date");
+        choreID = getIntent().getStringExtra("id");
+
 
         mChoreName = (EditText) findViewById(R.id.choreNameED);
         mChoreName.setText(oldName);
@@ -56,12 +59,13 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
         mUpdateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Chore chore = new Chore();//TODO: complete tutorial from here
+                ChoreWithID chore = new ChoreWithID();//TODO: complete tutorial from here
                 chore.setDate(newDate.toString());
                 chore.setName(mChoreName.toString());
                 chore.setPriority(mChorePriority);
+                chore.setId(choreID);
 
-                new FirebaseDatabaseHelper().updateChore("Fabian", "8", chore, new FirebaseDatabaseHelper.DataStatus() {//TODO make sure to grab the actual values of the user and key.
+                new FirebaseDatabaseHelper().updateChore("Fabian", chore.getId(), chore, new FirebaseDatabaseHelper.DataStatus() {//TODO make sure to grab the actual values of the user and key.
                     @Override
                     public void DataIsLoaded(List<User> users) {
 

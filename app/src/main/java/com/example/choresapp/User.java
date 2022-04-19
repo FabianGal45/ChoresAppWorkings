@@ -5,7 +5,7 @@ import java.util.List;
 
 public class User {
     private String name;
-    private List<Chore> choreList;
+    private List<ChoreWithID> choreList;
 
     //Constructors
     public User() {
@@ -13,7 +13,7 @@ public class User {
         name = "";
     }
 
-    public User(String name, Chore chore) {
+    public User(String name, ChoreWithID chore) {
         this.name = name;
         this.choreList.add(chore);
     }
@@ -27,13 +27,13 @@ public class User {
     }
 
     //I realized that when data wipes from the array of chores in the database helper they wipe in here too. Because of that, I have created this method which allows the program to add a chore.
-    public void addToChores(Chore chore){
+    public void addToChores(ChoreWithID chore){
         choreList.add(chore);
     }
 
     //This method is used to get the chores from the priority queue.
-    public void setChoreList(ArrayList<Chore> choreArrayList){
-        for(Chore chore:choreArrayList){
+    public void setChoreList(ArrayList<ChoreWithID> choreArrayList){
+        for(ChoreWithID chore:choreArrayList){
             addToChores(chore);
         }
     }
@@ -48,7 +48,7 @@ public class User {
         this.name = name;
     }
 
-    public List<Chore> getChoreList() {
+    public List<ChoreWithID> getChoreList() {
         return choreList;
     }
 

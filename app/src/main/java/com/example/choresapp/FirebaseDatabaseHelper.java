@@ -9,7 +9,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -19,7 +18,9 @@ public class FirebaseDatabaseHelper {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     private List<User> users = new ArrayList<>();
-//    private String UserID="userID";
+    private String mHouseID;
+    private String userID="userID1";
+
 
     public interface DataStatus{
         void DataIsLoaded(List<User> users);
@@ -32,7 +33,9 @@ public class FirebaseDatabaseHelper {
     public FirebaseDatabaseHelper(){
         mDatabase = FirebaseDatabase.getInstance("https://houseshare-2ddd0-default-rtdb.europe-west1.firebasedatabase.app/");
         mReference = mDatabase.getReference();
+        getHouseID();
     }
+
 
     public void readData(final DataStatus dataStatus){
         mReference.addValueEventListener(new ValueEventListener() {//House/chores
@@ -41,7 +44,8 @@ public class FirebaseDatabaseHelper {
                 users.clear();//Clears the previous users from the list to replace them with the new ones
                 System.out.println("##Clear<>");
 
-                DataSnapshot tenantsSnapshot = snapshot.child("homes").child("homeID").child("tenants");//I made a variable so that I would not have to provide all the children each time.
+                String houseID = snapshot.child("users").child(userID).child("home").getValue(String.class);//Stores the Id of the house the user is part of. It doesn't have to be an object it can also be a variable and it wil behave the same.
+                DataSnapshot tenantsSnapshot = snapshot.child("homes").child(houseID).child("tenants");//I made a variable so that I would not have to provide all the children each time.
 
                 for(DataSnapshot UserNode : tenantsSnapshot.getChildren()){//Loops through all the children (users) of the chores parent in the database.
                     System.out.println("### "+UserNode.getKey());
@@ -58,12 +62,18 @@ public class FirebaseDatabaseHelper {
                     for(DataSnapshot keyNode : tenantsSnapshot.child(UserNode.getKey()).child("chores").getChildren()){//loops through all the child nodes of the users to grab all the chores of the user.
                         if(keyNode.child("priority").exists() && keyNode.child("date").exists() && keyNode.child("date").exists()){//checks to see if the chore the necessary children. Used to prevent the app from crashing.
                             Chore chore = keyNode.getValue(Chore.class);//creates a new chore object for each user.
+                            String cName = chore.getName();
+                            int cPriority = chore.getPriority();
+                            String cDate=chore.getDate();
+                            ChoreWithID choreWithID = new ChoreWithID(cName,cPriority,cDate,keyNode.getKey());
+
+
                             int priority = keyNode.child("priority").getValue(Integer.class);//gets the priority of the chore.
-                            mPQ.enqueue(priority, chore);//Adds the chore and the priority to the priority queue to be arranged.
+                            mPQ.enqueue(priority, choreWithID);//Adds the chore and the priority to the priority queue to be arranged.
                             System.out.println("###> chores: "+keyNode.getKey()+" > "+ keyNode.getValue());
                         }
                     }
-                    user.setChoreList((ArrayList<Chore>) mPQ.getChores());//sets the list of chores with the chores that have been arranged based on their priority.
+                    user.setChoreList((ArrayList<ChoreWithID>) mPQ.getChores());//sets the list of chores with the chores that have been arranged based on their priority.
                 }
                 dataStatus.DataIsLoaded(users);
 
@@ -76,19 +86,53 @@ public class FirebaseDatabaseHelper {
         });
     }
 
-    public void addChore(String user, Chore chore, final DataStatus dataStatus){
-        String key = mReference.child("homes").child("homeID").child("tenants").child(user).push().getKey();
-        mReference.child(user).child(key).setValue(chore).addOnSuccessListener(new OnSuccessListener<Void>() {
+    public void getHouseID(){
+        mReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mHouseID = snapshot.child("users").child(userID).child("home").getValue(String.class);//Stores the Id of the house the user is part of. It doesn't have to be an object it can also be a variable and it wil behave the same.
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void addChore(Chore chore, final DataStatus dataStatus){
+        getHouseID();
+        System.out.println("???1"+ mHouseID);//Todo: house ID is null again
+
+        mReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mHouseID = snapshot.child("users").child(userID).child("home").getValue(String.class);//Stores the Id of the house the user is part of. It doesn't have to be an object it can also be a variable and it wil behave the same.
+                System.out.println("???2"+ mHouseID);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+        System.out.println("???3"+ mHouseID);
+        String key = mReference.child("homes").child(mHouseID).child("tenants").child(userID).child("chores").push().getKey();
+        System.out.println("???key: "+ key);
+        mReference.child("homes").child("homeID").child("tenants").child(userID).child("chores").child(key).setValue(chore).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 dataStatus.DataIsInserted();
             }
         });
 
+
     }
 
-    public void updateChore(String user,String key, Chore chore, final DataStatus dataStatus){
-        mReference.child(user).child(key).setValue(chore).addOnSuccessListener(new OnSuccessListener<Void>() {
+    public void updateChore(String userID, String choreID ,Chore chore, final DataStatus dataStatus){
+        mReference.child("homes").child("homeID").child("tenants").child(userID).child("chores").child(choreID).setValue(chore).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 dataStatus.DataUpdated();
@@ -96,8 +140,9 @@ public class FirebaseDatabaseHelper {
         });
     }
 
-    public void deleteChore(String user, String key, final DataStatus dataStatus){
-        mReference.child(user).child(key).setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
+    //TODO: get the correct user for each chore that is being clicked or only allow the user that is signed in to tick their own chores.
+    public void deleteChore(String user, String key, final DataStatus dataStatus){//TODO: Make it so you can only delete your own chores
+        mReference.child("homes").child("homeID").child("tenants").child(userID).child("chores").child(key).setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 dataStatus.DataDeleted();

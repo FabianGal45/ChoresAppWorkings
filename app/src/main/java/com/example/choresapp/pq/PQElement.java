@@ -1,12 +1,13 @@
 package com.example.choresapp.pq;
 
 import com.example.choresapp.Chore;
+import com.example.choresapp.ChoreWithID;
 
 public class PQElement {
     private int key;
-    private Chore chore;
+    private ChoreWithID chore;
 
-    public PQElement(int key, Chore chore) {
+    public PQElement(int key, ChoreWithID chore) {
         this.key = key;
         this.chore = chore;
     }
@@ -19,11 +20,11 @@ public class PQElement {
         this.key = key;
     }
 
-    public Chore getChore() {
+    public ChoreWithID getChore() {
         return chore;
     }
 
-    public void setChore(Chore chore) {
+    public void setChore(ChoreWithID chore) {
         this.chore = chore;
     }
 }
