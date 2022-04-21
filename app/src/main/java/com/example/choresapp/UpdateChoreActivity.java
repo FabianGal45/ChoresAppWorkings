@@ -68,7 +68,7 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
                 chore.setPriority(mChorePriority);
                 chore.setId(choreID);
 
-                new FirebaseDatabaseHelper().updateChore(houseID, userID, chore.getId(), chore, new FirebaseDatabaseHelper.DataStatus() {//TODO make sure to grab the actual values of the user and key.
+                new FirebaseDatabaseHelper().updateChore(houseID, userID, chore.getId(), chore, new FirebaseDatabaseHelper.DataStatus() {
                     @Override
                     public void DataIsLoaded(List<User> users, String houseID) {
 

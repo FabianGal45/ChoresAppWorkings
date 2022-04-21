@@ -86,10 +86,11 @@ public class FirebaseDatabaseHelper {
         });
     }
 
-    public void addChore(Chore chore, final DataStatus dataStatus){
-        String key = mReference.child("homes").child("homeID").child("tenants").child(userID).child("chores").push().getKey();//TODO: Find the house ID here. Fill in here with the house ID that gets passed around
+    //TODO: create the algorithm in here.
+    public void addChore(String houseID, Chore chore, final DataStatus dataStatus){
+        String key = mReference.child("homes").child(houseID).child("tenants").child(userID).child("chores").push().getKey();
         System.out.println("???key: "+ key);
-        mReference.child("homes").child("homeID").child("tenants").child(userID).child("chores").child(key).setValue(chore).addOnSuccessListener(new OnSuccessListener<Void>() {
+        mReference.child("homes").child(houseID).child("tenants").child(userID).child("chores").child(key).setValue(chore).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 dataStatus.DataIsInserted();

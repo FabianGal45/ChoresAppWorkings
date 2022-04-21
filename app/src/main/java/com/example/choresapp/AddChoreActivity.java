@@ -23,6 +23,7 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
     private EditText mChoreName;
     private int mChorePriority;
     private LocalDate date;
+    private String houseID;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -36,6 +37,8 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
         mCancelBtn = (Button) findViewById(R.id.cancelBtn);
         mAddBtn = (Button) findViewById(R.id.updateChoreBtn);
 
+        houseID = getIntent().getStringExtra("houseID");
+
         //Spinner setup
         Spinner prioritySpinner = findViewById(R.id.prioritySpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.prioritySpinner, android.R.layout.simple_spinner_item);
@@ -47,7 +50,7 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public void onClick(View view) {
                 Chore chore = new Chore(mChoreName.getText().toString(),mChorePriority,date.toString());//Creates the new chore with the values in the current activity.
-                new FirebaseDatabaseHelper().addChore(chore, new FirebaseDatabaseHelper.DataStatus() {//TODO Always update the username in here to one that exists in order to add chores.
+                new FirebaseDatabaseHelper().addChore(houseID, chore, new FirebaseDatabaseHelper.DataStatus() {//TODO Always update the username in here to one that exists in order to add chores.
                     @Override
                     public void DataIsLoaded(List<User> users, String houseID) {
 
