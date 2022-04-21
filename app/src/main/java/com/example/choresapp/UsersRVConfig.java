@@ -15,9 +15,9 @@ public class UsersRVConfig {
     private Context mContext;
 
     private UserAdapter mUserAdapter;
-    public void setUsersConfig(RecyclerView recyclerView, Context context, List<User> users){
+    public void setUsersConfig(RecyclerView recyclerView, Context context, List<User> users, String houseID){
         mContext = context;
-        mUserAdapter = new UserAdapter(users);
+        mUserAdapter = new UserAdapter(users, houseID);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(mUserAdapter);
     }
@@ -27,11 +27,13 @@ public class UsersRVConfig {
     class UserItemView extends RecyclerView.ViewHolder{
         private TextView mUserName;
         private RecyclerView choresRV;
+        private String mHouseID;
 
-        public UserItemView(ViewGroup parent) {
+        public UserItemView(ViewGroup parent, String houseID) {
             super(LayoutInflater.from(mContext).inflate(R.layout.user_item, parent, false));
             mUserName = (TextView) itemView.findViewById(R.id.userNameTV);
             choresRV = (RecyclerView) itemView.findViewById(R.id.choresRV);
+            mHouseID = houseID;
         }
 
         //displays info into the row layout(chore_item.xml)
@@ -40,22 +42,24 @@ public class UsersRVConfig {
 
             //Calls upon the chores rv config to print data
             ChoresRVConfig mChoresRVConfig = new ChoresRVConfig();
-            mChoresRVConfig.setChoresConfig(choresRV,mContext, user.getChoreList());
+            mChoresRVConfig.setChoresConfig(choresRV,mContext, user.getChoreList(), mHouseID, user.getId());
         }
     }
 
     //The adapter class for the recyclerview
     class UserAdapter extends RecyclerView.Adapter<UserItemView> {
         private List<User> mUserList;
+        private String houseID;
 
-        public UserAdapter(List<User> mUserList) {
+        public UserAdapter(List<User> mUserList, String houseID) {
             this.mUserList = mUserList;
+            this.houseID = houseID;
         }
 
         @NonNull
         @Override
         public UserItemView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new UserItemView(parent);
+            return new UserItemView(parent, houseID);
         }
 
         @Override

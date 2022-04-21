@@ -6,19 +6,21 @@ import java.util.List;
 public class User {
     private String name;
     private List<ChoreWithID> choreList;
+    private String id;
 
     //Constructors
     public User() {
         choreList = new ArrayList<>();
         name = "";
+        id = "";
     }
 
-    public User(String name, ChoreWithID chore) {
+    public User(String name, ChoreWithID chore, String id) {
         this.name = name;
         this.choreList.add(chore);
+        this.id = id;
     }
 
-    //constructor
     //Method used for testing
     public void printChores(){
         for(int i = 0; i< choreList.size(); i++){
@@ -52,4 +54,11 @@ public class User {
         return choreList;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

@@ -28,6 +28,8 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
     private String oldPriority;
     private String oldDate;
     private String choreID;
+    private String houseID;
+    private String userID;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -39,7 +41,8 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
         oldPriority = getIntent().getStringExtra("priority");
         oldDate = getIntent().getStringExtra("date");
         choreID = getIntent().getStringExtra("id");
-
+        houseID = getIntent().getStringExtra("houseID");
+        userID = getIntent().getStringExtra("userID");
 
         mChoreName = (EditText) findViewById(R.id.choreNameED);
         mChoreName.setText(oldName);
@@ -61,13 +64,13 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
             public void onClick(View view) {
                 ChoreWithID chore = new ChoreWithID();//TODO: complete tutorial from here
                 chore.setDate(newDate.toString());
-                chore.setName(mChoreName.toString());
+                chore.setName(mChoreName.getText().toString());
                 chore.setPriority(mChorePriority);
                 chore.setId(choreID);
 
-                new FirebaseDatabaseHelper().updateChore("Fabian", chore.getId(), chore, new FirebaseDatabaseHelper.DataStatus() {//TODO make sure to grab the actual values of the user and key.
+                new FirebaseDatabaseHelper().updateChore(houseID, userID, chore.getId(), chore, new FirebaseDatabaseHelper.DataStatus() {//TODO make sure to grab the actual values of the user and key.
                     @Override
-                    public void DataIsLoaded(List<User> users) {
+                    public void DataIsLoaded(List<User> users, String houseID) {
 
                     }
 
@@ -86,6 +89,7 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
 
                     }
                 });
+                finish();return;
             }
         });
 

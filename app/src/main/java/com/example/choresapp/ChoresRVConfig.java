@@ -18,9 +18,9 @@ public class ChoresRVConfig {
     private Context mContext;
 
     private ChoresAdapter mChoresAdapter;
-    public void setChoresConfig(RecyclerView recyclerView, Context context, List<ChoreWithID> chores){
+    public void setChoresConfig(RecyclerView recyclerView, Context context, List<ChoreWithID> chores, String houseID, String userID){
         mContext = context;
-        mChoresAdapter = new ChoresAdapter(chores);
+        mChoresAdapter = new ChoresAdapter(chores, houseID, userID);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(mChoresAdapter);
     }
@@ -29,9 +29,9 @@ public class ChoresRVConfig {
     //The View holder for the recyclerview
     class ChoreItemView extends RecyclerView.ViewHolder{
         private CheckBox mCheckbox;
-        private ChoreWithID chore;//holds the chore object
+        private ChoreWithID chore;//holds the chore object#
 
-        public ChoreItemView(ViewGroup parent) {
+        public ChoreItemView(ViewGroup parent, String houseID, String userID) {
             super(LayoutInflater.from(mContext).inflate(R.layout.chore_item, parent, false));
             mCheckbox = (CheckBox) itemView.findViewById(R.id.itemCheckBox);
 
@@ -45,6 +45,8 @@ public class ChoresRVConfig {
                     intent.putExtra("priority", Integer.toString(chore.getPriority()));
                     intent.putExtra("date", chore.getDate());
                     intent.putExtra("id", chore.getId());
+                    intent.putExtra("houseID", houseID);
+                    intent.putExtra("userID", userID);
                     mContext.startActivity(intent);
                     return false;
                 }
@@ -55,9 +57,9 @@ public class ChoresRVConfig {
                 public void onClick(View view) {
                     if(mCheckbox.isChecked()){
                         Toast.makeText(mContext, "I should have been deleted now", Toast.LENGTH_SHORT).show();
-                        new FirebaseDatabaseHelper().deleteChore("userID", chore.getId(), new FirebaseDatabaseHelper.DataStatus() {//TODO: make sure the user and key are correct
+                        new FirebaseDatabaseHelper().deleteChore(houseID, userID, chore.getId(), new FirebaseDatabaseHelper.DataStatus() {//TODO: make sure the user and key are correct
                             @Override
-                            public void DataIsLoaded(List<User> users) {
+                            public void DataIsLoaded(List<User> users, String houseID) {
 
                             }
 
@@ -93,15 +95,19 @@ public class ChoresRVConfig {
     //The adapter class for the recyclerview
     class ChoresAdapter extends RecyclerView.Adapter<ChoreItemView>{
         private List<ChoreWithID> mChoresList;
+        private String houseID;
+        private String userID;
 
-        public ChoresAdapter(List<ChoreWithID> mChoresList) {
+        public ChoresAdapter(List<ChoreWithID> mChoresList, String houseID, String userID) {
             this.mChoresList = mChoresList;
+            this.houseID = houseID;
+            this.userID = userID;
         }
 
         @NonNull
         @Override
         public ChoreItemView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new ChoreItemView(parent);
+            return new ChoreItemView(parent, houseID, userID);
         }
 
         @Override

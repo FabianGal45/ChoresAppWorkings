@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
         mUserRV = (RecyclerView) findViewById(R.id.usersRecyclerView);
         new FirebaseDatabaseHelper().readData(new FirebaseDatabaseHelper.DataStatus() {
             @Override
-            public void DataIsLoaded(List<User> users) {
-                new UsersRVConfig().setUsersConfig(mUserRV, MainActivity.this, users);
+            public void DataIsLoaded(List<User> users, String houseID) {
+                new UsersRVConfig().setUsersConfig(mUserRV, MainActivity.this, users, houseID);
             }
 
             @Override

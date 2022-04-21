@@ -49,7 +49,7 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
                 Chore chore = new Chore(mChoreName.getText().toString(),mChorePriority,date.toString());//Creates the new chore with the values in the current activity.
                 new FirebaseDatabaseHelper().addChore(chore, new FirebaseDatabaseHelper.DataStatus() {//TODO Always update the username in here to one that exists in order to add chores.
                     @Override
-                    public void DataIsLoaded(List<User> users) {
+                    public void DataIsLoaded(List<User> users, String houseID) {
 
                     }
 
