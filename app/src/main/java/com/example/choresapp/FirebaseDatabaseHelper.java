@@ -17,7 +17,7 @@ import java.util.List;
 public class FirebaseDatabaseHelper {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
-    private List<User> users = new ArrayList<>();
+    private List<User> users = new ArrayList<User>();
     private String userID="userID1"; //TODO: will be replace by getting the current user that has been logged in
 
 
@@ -86,11 +86,9 @@ public class FirebaseDatabaseHelper {
         });
     }
 
-    //TODO: create the algorithm in here.
-    public void addChore(String houseID, Chore chore, final DataStatus dataStatus){
-        String key = mReference.child("homes").child(houseID).child("tenants").child(userID).child("chores").push().getKey();
-        System.out.println("???key: "+ key);
-        mReference.child("homes").child(houseID).child("tenants").child(userID).child("chores").child(key).setValue(chore).addOnSuccessListener(new OnSuccessListener<Void>() {
+    public void addChore(String houseID,String userID, Chore chore, final DataStatus dataStatus){
+        String choreID = mReference.child("homes").child(houseID).child("tenants").child(userID).child("chores").push().getKey();
+        mReference.child("homes").child(houseID).child("tenants").child(userID).child("chores").child(choreID).setValue(chore).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 dataStatus.DataIsInserted();
@@ -109,8 +107,8 @@ public class FirebaseDatabaseHelper {
     }
 
 
-    public void deleteChore(String houseID, String user, String key, final DataStatus dataStatus){//TODO: Make it so you can only delete your own chores
-        mReference.child("homes").child(houseID).child("tenants").child(user).child("chores").child(key).setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
+    public void deleteChore(String houseID, String userID, String key, final DataStatus dataStatus){//TODO: Make it so you can only delete your own chores
+        mReference.child("homes").child(houseID).child("tenants").child(userID).child("chores").child(key).setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 dataStatus.DataDeleted();

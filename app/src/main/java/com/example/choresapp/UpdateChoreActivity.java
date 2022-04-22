@@ -62,11 +62,11 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
         mUpdateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ChoreWithID chore = new ChoreWithID();//TODO: complete tutorial from here
-                chore.setDate(newDate.toString());
-                chore.setName(mChoreName.getText().toString());
-                chore.setPriority(mChorePriority);
-                chore.setId(choreID);
+                ChoreWithID chore = new ChoreWithID(mChoreName.getText().toString(),mChorePriority,newDate.toString(),choreID);//TODO: complete tutorial from here
+//                chore.setDate(newDate.toString());
+//                chore.setName(mChoreName.getText().toString());
+//                chore.setPriority(mChorePriority);
+//                chore.setId(choreID);
 
                 new FirebaseDatabaseHelper().updateChore(houseID, userID, chore.getId(), chore, new FirebaseDatabaseHelper.DataStatus() {
                     @Override

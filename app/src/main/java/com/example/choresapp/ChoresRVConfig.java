@@ -38,7 +38,6 @@ public class ChoresRVConfig {
             mCheckbox.setOnLongClickListener(new View.OnLongClickListener() {//Implements on long click listener to open am edit menu
                 @Override
                 public boolean onLongClick(View view) {
-                    Toast.makeText(mContext, "I am a chore!", Toast.LENGTH_SHORT).show();
                     System.out.println("INTENT THING> "+chore.getName());
                     Intent intent = new Intent(mContext, UpdateChoreActivity.class);
                     intent.putExtra("name", chore.getName()); //these putExtra methods are sending over the following values into the updateChoreActivity to be displayed.
@@ -56,8 +55,7 @@ public class ChoresRVConfig {
                 @Override
                 public void onClick(View view) {
                     if(mCheckbox.isChecked()){
-                        Toast.makeText(mContext, "I should have been deleted now", Toast.LENGTH_SHORT).show();
-                        new FirebaseDatabaseHelper().deleteChore(houseID, userID, chore.getId(), new FirebaseDatabaseHelper.DataStatus() {//TODO: make sure the user and key are correct
+                        new FirebaseDatabaseHelper().deleteChore(houseID, userID, chore.getId(), new FirebaseDatabaseHelper.DataStatus() {
                             @Override
                             public void DataIsLoaded(List<User> users, String houseID) {
 

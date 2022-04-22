@@ -1,9 +1,11 @@
 package com.example.choresapp;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User implements Parcelable {//I used parcelable to pass the List of chores into the AddChoreActivity class.
     private String name;
     private List<ChoreWithID> choreList;
     private String id;
@@ -21,11 +23,35 @@ public class User {
         this.id = id;
     }
 
+    protected User(Parcel in) {
+        name = in.readString();
+        id = in.readString();
+        choreList = in.createTypedArrayList(ChoreWithID.CREATOR); //Reference: https://medium.com/@jlf426551/saving-a-nested-arraylist-object-to-a-bundle-in-android-6307abcf5429
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
     //Method used for testing
     public void printChores(){
-        for(int i = 0; i< choreList.size(); i++){
-            System.out.println(">> Chores: "+ choreList.get(i).getName());
+        if(choreList!=null){
+            for(int i = 0; i< choreList.size(); i++){
+                System.out.println(">> Chores: "+ choreList.get(i).getName());
+            }
         }
+        else{
+            System.out.println("The Chore list is empty/null!");
+        }
+
     }
 
     //I realized that when data wipes from the array of chores in the database helper they wipe in here too. Because of that, I have created this method which allows the program to add a chore.
@@ -60,5 +86,17 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(id);
+        parcel.writeTypedList(choreList);
     }
 }

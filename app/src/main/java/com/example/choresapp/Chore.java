@@ -1,6 +1,9 @@
 package com.example.choresapp;
 
-public class Chore {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Chore implements Parcelable {
     private String name;
     private int priority;
     private String date;
@@ -14,6 +17,24 @@ public class Chore {
         this.priority = priority;
         this.date = date;
     }
+
+    protected Chore(Parcel in) {
+        name = in.readString();
+        priority = in.readInt();
+        date = in.readString();
+    }
+
+    public static final Creator<Chore> CREATOR = new Creator<Chore>() {
+        @Override
+        public Chore createFromParcel(Parcel in) {
+            return new Chore(in);
+        }
+
+        @Override
+        public Chore[] newArray(int size) {
+            return new Chore[size];
+        }
+    };
 
     //Getters and setters
     public String getName() {
@@ -38,5 +59,17 @@ public class Chore {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeInt(priority);
+        parcel.writeString(date);
     }
 }

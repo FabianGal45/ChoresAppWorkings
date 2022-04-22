@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddChoreActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -24,6 +24,7 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
     private int mChorePriority;
     private LocalDate date;
     private String houseID;
+//    private ArrayList<User> users = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -39,6 +40,15 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
 
         houseID = getIntent().getStringExtra("houseID");
 
+//        Bundle bundle = getIntent().getExtras();
+//        ArrayList<User> users = bundle.getParcelableArrayList("usersList");
+
+        ArrayList<User> users = getIntent().getParcelableArrayListExtra("usersList");
+
+        System.out.println("<><><><>>>>>>> This is the first user: "+users.get(1).getId());
+        System.out.println("<><><><>>>>>>> Chore array for the first user: "+users.get(0).getChoreList());
+//        System.out.println("//"+ users.get(0).getChoreList().get(0).getId());
+
         //Spinner setup
         Spinner prioritySpinner = findViewById(R.id.prioritySpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.prioritySpinner, android.R.layout.simple_spinner_item);
@@ -46,11 +56,29 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
         prioritySpinner.setAdapter(adapter);
         prioritySpinner.setOnItemSelectedListener(this);
 
+
+
         mAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO: create the algorithm in here.
+
+
+                for(User user: users){
+                    int userTotalPriority = 0;
+                    List<ChoreWithID> chores = user.getChoreList();
+                    for(ChoreWithID chore: chores){
+//                        System.out.println("#### User: "+user.getName()+", Priority: "+ chore.getPriority()+", "+chore.getName()+", "+chore.getDate());
+                        userTotalPriority += chore.getPriority();
+                    }
+                    System.out.println("#### User: "+user.getName()+", Priority Total: "+ userTotalPriority);
+                }
+
+
+                String userID = users.get(0).getId();
                 Chore chore = new Chore(mChoreName.getText().toString(),mChorePriority,date.toString());//Creates the new chore with the values in the current activity.
-                new FirebaseDatabaseHelper().addChore(houseID, chore, new FirebaseDatabaseHelper.DataStatus() {//TODO Always update the username in here to one that exists in order to add chores.
+
+                new FirebaseDatabaseHelper().addChore(houseID, userID, chore, new FirebaseDatabaseHelper.DataStatus() {//TODO Always update the username in here to one that exists in order to add chores.
                     @Override
                     public void DataIsLoaded(List<User> users, String houseID) {
 
