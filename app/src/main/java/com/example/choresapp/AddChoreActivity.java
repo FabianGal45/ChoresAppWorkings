@@ -67,35 +67,37 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
                 //TODO: create the algorithm in here.
 
                 //calculate the total priorities
+                ArrayList<User> prioritiesList = new ArrayList<>();
                 for(User user: users){
                     int totalPriority = 0;
                     List<ChoreWithID> chores = user.getChoreList();
-                    for(ChoreWithID chore: chores){
+                    for(ChoreWithID chore: chores){ //calculate the total priority for each user
 //                        System.out.println("#### User: "+user.getName()+", Priority: "+ chore.getPriority()+", "+chore.getName()+", "+chore.getDate());
                         totalPriority += chore.getPriority();
                     }
                     user.setTotalPriority(totalPriority);
                     System.out.println("#### User: "+user.getName()+", Priority Total: "+ totalPriority);
+
+                    addToList(prioritiesList, user, user.getTotalPriority());//Sort the list
+                    System.out.println("####>> User: "+user.getName()+", > "+ user.getTotalPriority());
                 }
-
-
                 //find the lowest and the highest
-                ArrayList<User> prioritiesList = new ArrayList<>();
-                for(User user: users){
-                    addToList(prioritiesList, user, user.getTotalPriority());
-                }
                 User userLowestPriorityTotal = prioritiesList.get(0);
                 User userHighestPriorityTotal = prioritiesList.get(prioritiesList.size()-1);
 
-                //testing
-                for(User pl: prioritiesList){
-                    System.out.println("####>> User: "+pl.getName()+", > "+ pl.getTotalPriority());
+
+                //find if everyone has the same amount of chores
+                boolean equalChoresAmount = true;
+                for(User user :users){
+                    if(users.get(0).getChoreList().size()!=user.getChoreList().size()){//Get the size of the first user and compare it with the size of the rest. if they don't match then not all users have the same amount of chores.
+                        equalChoresAmount=false;
+                        break;
+                    }
                 }
-//                prioritiesList.clear();
 
                 //Adding the chore
                 String userID;
-                if(mChorePriority == 10 || mChorePriority == 9) {
+                if(mChorePriority == 10 || mChorePriority == 9 || !equalChoresAmount) {
                     userID = userLowestPriorityTotal.getId();
                     Chore chore = new Chore(mChoreName.getText().toString(), mChorePriority, date.toString());//Creates the new chore with the values in the current activity.
                     System.out.println("Chore "+chore.getName()+" > "+chore.getPriority()+" added to: "+ userLowestPriorityTotal.getName());
@@ -164,7 +166,6 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
 
     //method used to add and sort items in  an array list.
     public void addToList(ArrayList<User> list, User user, int num){
-        int userPriority = user.getTotalPriority();
         boolean found = false;
         int position = 0;
 

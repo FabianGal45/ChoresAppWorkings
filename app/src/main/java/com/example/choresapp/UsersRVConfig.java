@@ -2,6 +2,7 @@ package com.example.choresapp;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -27,12 +28,14 @@ public class UsersRVConfig {
     class UserItemView extends RecyclerView.ViewHolder{
         private TextView mUserName;
         private RecyclerView choresRV;
+        private TextView emptyView;
         private String mHouseID;
 
         public UserItemView(ViewGroup parent, String houseID) {
             super(LayoutInflater.from(mContext).inflate(R.layout.user_item, parent, false));
             mUserName = (TextView) itemView.findViewById(R.id.userNameTV);
             choresRV = (RecyclerView) itemView.findViewById(R.id.choresRV);
+            emptyView = (TextView) itemView.findViewById(R.id.emptyView);
             mHouseID = houseID;
         }
 
@@ -40,9 +43,18 @@ public class UsersRVConfig {
         public void bind(User user){
             mUserName.setText(user.getName());
 
-            //Calls upon the chores rv config to print data
-            ChoresRVConfig mChoresRVConfig = new ChoresRVConfig();
-            mChoresRVConfig.setChoresConfig(choresRV,mContext, user.getChoreList(), mHouseID, user.getId());
+            if(user.getChoreList().isEmpty()){//Ref: https://www.youtube.com/watch?v=E7FEVV74jz0
+                mUserName.setVisibility(View.GONE);
+                choresRV.setVisibility(View.GONE);
+//                emptyView.setVisibility(View.VISIBLE);
+//                emptyView.setText("No chores for "+user.getName());
+            }
+            else{
+                //Calls upon the chores rv config to print data
+                ChoresRVConfig mChoresRVConfig = new ChoresRVConfig();
+                mChoresRVConfig.setChoresConfig(choresRV,mContext, user.getChoreList(), mHouseID, user.getId());
+            }
+
         }
     }
 

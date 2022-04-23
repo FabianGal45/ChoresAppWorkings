@@ -2,6 +2,7 @@ package com.example.choresapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,6 +85,13 @@ public class ChoresRVConfig {
         //displays info into the row layout(chore_item.xml)
         public void bind(ChoreWithID chore){
             mCheckbox.setText(chore.getName());
+            if(chore.getPriority()>=10){
+                mCheckbox.setBackgroundColor(Color.parseColor("#FF7070"));
+                mCheckbox.setTextColor(Color.parseColor("#1f1f1f"));
+            }
+            else if(chore.getPriority()==9){
+                mCheckbox.setBackgroundColor(Color.parseColor("#83FC73"));
+            }
             this.chore=chore;
         }
 

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +20,8 @@ public class MainChoresActivity extends AppCompatActivity {
 
     private RecyclerView mUserRV;
     private FloatingActionButton mAddChoreFAB;
+    private TextView mNoChoresTV;
+    private TextView mNoChoresArrowTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +30,25 @@ public class MainChoresActivity extends AppCompatActivity {
 
         mUserRV = (RecyclerView) findViewById(R.id.usersRecyclerView);
         mAddChoreFAB = (FloatingActionButton) findViewById(R.id.addChoresFAB);
+        mNoChoresTV = (TextView) findViewById(R.id.noChoresTV);
+        mNoChoresArrowTV = (TextView) findViewById(R.id.noChoresArrowTV);
+
         new FirebaseDatabaseHelper().readData(new FirebaseDatabaseHelper.DataStatus() {
             @Override
             public void DataIsLoaded(List<User> users, String houseID) {
+                findViewById(R.id.choresProgressBar).setVisibility(View.GONE);
+
+                mNoChoresTV.setVisibility(View.VISIBLE);
+                mNoChoresArrowTV.setVisibility(View.VISIBLE);
+                mUserRV.setVisibility(View.GONE);
+                for(User user : users){
+                    if(!user.getChoreList().isEmpty()){
+                        mNoChoresTV.setVisibility(View.GONE);
+                        mNoChoresArrowTV.setVisibility(View.GONE);
+                        mUserRV.setVisibility(View.VISIBLE);
+                        break;
+                    }
+                }
                 new UsersRVConfig().setUsersConfig(mUserRV, MainChoresActivity.this, users, houseID);
 
                 mAddChoreFAB.setOnClickListener(new View.OnClickListener() {
