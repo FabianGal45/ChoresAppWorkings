@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.example.choresapp.pq.PQElement;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,41 +67,88 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
                 //TODO: create the algorithm in here.
 
 
+
+                //calculate the total priorities
                 for(User user: users){
-                    int userTotalPriority = 0;
+                    int totalPriority = 0;
                     List<ChoreWithID> chores = user.getChoreList();
                     for(ChoreWithID chore: chores){
 //                        System.out.println("#### User: "+user.getName()+", Priority: "+ chore.getPriority()+", "+chore.getName()+", "+chore.getDate());
-                        userTotalPriority += chore.getPriority();
+                        totalPriority += chore.getPriority();
                     }
-                    System.out.println("#### User: "+user.getName()+", Priority Total: "+ userTotalPriority);
+                    user.setTotalPriority(totalPriority);
+                    System.out.println("#### User: "+user.getName()+", Priority Total: "+ totalPriority);
                 }
 
 
-                String userID = users.get(0).getId();
-                Chore chore = new Chore(mChoreName.getText().toString(),mChorePriority,date.toString());//Creates the new chore with the values in the current activity.
+                //find the lowest and the highest
+                ArrayList<User> prioritiesList = new ArrayList<>();
+                for(User user: users){
+                    addToList(prioritiesList,user,user.getTotalPriority());
+                }
+                User userLowestPriorityTotal = prioritiesList.get(0);
+                User userHighestPriorityTotal = prioritiesList.get(prioritiesList.size()-1);
 
-                new FirebaseDatabaseHelper().addChore(houseID, userID, chore, new FirebaseDatabaseHelper.DataStatus() {//TODO Always update the username in here to one that exists in order to add chores.
-                    @Override
-                    public void DataIsLoaded(List<User> users, String houseID) {
+                //testing
+                for(User pl: prioritiesList){
+                    System.out.println("####>> User: "+pl.getName()+", > "+ pl.getTotalPriority());
+                }
+//                prioritiesList.clear();
 
-                    }
+                //Adding the chore
+                String userID;
+                if(mChorePriority == 10 || mChorePriority == 9) {
+                    userID = userLowestPriorityTotal.getId();
+                    Chore chore = new Chore(mChoreName.getText().toString(), mChorePriority, date.toString());//Creates the new chore with the values in the current activity.
+                    System.out.println("Chore "+chore.getName()+" > "+chore.getPriority()+" added to: "+ userLowestPriorityTotal.getName());
+                    new FirebaseDatabaseHelper().addChore(houseID, userID, chore, new FirebaseDatabaseHelper.DataStatus() {//TODO Always update the username in here to one that exists in order to add chores.
+                        @Override
+                        public void DataIsLoaded(List<User> users, String houseID) {
 
-                    @Override
-                    public void DataIsInserted() {
-                        Toast.makeText(AddChoreActivity.this,"Chore successfully added!",Toast.LENGTH_SHORT).show();
-                    }
+                        }
 
-                    @Override
-                    public void DataUpdated() {
+                        @Override
+                        public void DataIsInserted() {
+                            Toast.makeText(AddChoreActivity.this, "Chore successfully added!", Toast.LENGTH_SHORT).show();
+                        }
 
-                    }
+                        @Override
+                        public void DataUpdated() {
 
-                    @Override
-                    public void DataDeleted() {
+                        }
 
-                    }
-                });
+                        @Override
+                        public void DataDeleted() {
+
+                        }
+                    });
+                }
+                else{
+                    userID = userHighestPriorityTotal.getId();
+                    Chore chore = new Chore(mChoreName.getText().toString(), mChorePriority, date.toString());//Creates the new chore with the values in the current activity.
+                    new FirebaseDatabaseHelper().addChore(houseID, userID, chore, new FirebaseDatabaseHelper.DataStatus() {//TODO Always update the username in here to one that exists in order to add chores.
+                        @Override
+                        public void DataIsLoaded(List<User> users, String houseID) {
+
+                        }
+
+                        @Override
+                        public void DataIsInserted() {
+                            Toast.makeText(AddChoreActivity.this, "Chore successfully added!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void DataUpdated() {
+
+                        }
+
+                        @Override
+                        public void DataDeleted() {
+
+                        }
+                    });
+                }
+
                 finish();
                 return;
             }
@@ -112,6 +162,30 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
             }
         });
     }
+
+    //method used to add and sort items in  an array list.
+    public void addToList(ArrayList<User> list, User user, int num){
+        int userPriority = user.getTotalPriority();
+        boolean found = false;
+        int position = 0;
+
+        while (position < list.size() && !found) {
+            list.get(position);
+
+            if (userPriority > num) {
+                position = position + 1;
+            } else {
+                found = true;
+            }
+        }
+
+        if (position == list.size()) {
+            list.add(user);
+        } else {
+            list.add(position, user);
+        }
+    }
+
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

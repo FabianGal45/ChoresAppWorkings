@@ -9,12 +9,14 @@ public class User implements Parcelable {//I used parcelable to pass the List of
     private String name;
     private List<ChoreWithID> choreList;
     private String id;
+    private int totalPriority;
 
     //Constructors
     public User() {
         choreList = new ArrayList<>();
         name = "";
         id = "";
+        totalPriority = 0;
     }
 
     public User(String name, ChoreWithID chore, String id) {
@@ -86,6 +88,14 @@ public class User implements Parcelable {//I used parcelable to pass the List of
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public int getTotalPriority() {
+        return totalPriority;
+    }
+
+    public void setTotalPriority(int totalPriority) {
+        this.totalPriority = totalPriority;
     }
 
     @Override
