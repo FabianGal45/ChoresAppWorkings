@@ -19,7 +19,6 @@ public class MainChoresActivity extends AppCompatActivity {
 
     private RecyclerView mUserRV;
     private FloatingActionButton mAddChoreFAB;
-    private CheckBox mCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

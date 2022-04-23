@@ -66,8 +66,6 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
             public void onClick(View view) {
                 //TODO: create the algorithm in here.
 
-
-
                 //calculate the total priorities
                 for(User user: users){
                     int totalPriority = 0;
@@ -84,7 +82,7 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
                 //find the lowest and the highest
                 ArrayList<User> prioritiesList = new ArrayList<>();
                 for(User user: users){
-                    addToList(prioritiesList,user,user.getTotalPriority());
+                    addToList(prioritiesList, user, user.getTotalPriority());
                 }
                 User userLowestPriorityTotal = prioritiesList.get(0);
                 User userHighestPriorityTotal = prioritiesList.get(prioritiesList.size()-1);
@@ -126,6 +124,7 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
                 else{
                     userID = userHighestPriorityTotal.getId();
                     Chore chore = new Chore(mChoreName.getText().toString(), mChorePriority, date.toString());//Creates the new chore with the values in the current activity.
+                    System.out.println("Chore "+chore.getName()+" > "+chore.getPriority()+" added to: "+ userHighestPriorityTotal.getName());
                     new FirebaseDatabaseHelper().addChore(houseID, userID, chore, new FirebaseDatabaseHelper.DataStatus() {//TODO Always update the username in here to one that exists in order to add chores.
                         @Override
                         public void DataIsLoaded(List<User> users, String houseID) {
@@ -172,7 +171,7 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
         while (position < list.size() && !found) {
             list.get(position);
 
-            if (userPriority > num) {
+            if (list.get(position).getTotalPriority() < num) {
                 position = position + 1;
             } else {
                 found = true;
