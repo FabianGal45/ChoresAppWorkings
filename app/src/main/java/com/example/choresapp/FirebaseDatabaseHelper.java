@@ -1,6 +1,10 @@
 package com.example.choresapp;
 
+import android.os.Build;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.example.choresapp.pq.MyPriorityQueue;
 import com.example.choresapp.pq.PQInterface;
@@ -11,6 +15,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -20,7 +26,7 @@ import java.util.TimerTask;
 public class FirebaseDatabaseHelper {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
-    private List<User> users = new ArrayList<User>();
+    private List<User> users = new ArrayList<>();
     private String userID="userID1"; //TODO: will be replace by getting the current user that has been logged in
 
 
@@ -33,6 +39,7 @@ public class FirebaseDatabaseHelper {
 
     //INFO: Since this class is an object that gets instantiated throughout other classes the previously save values are lost.
     //UPDATE: Changing the database structure to get the usernames first then the keys
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public FirebaseDatabaseHelper(){
         mDatabase = FirebaseDatabase.getInstance("https://houseshare-2ddd0-default-rtdb.europe-west1.firebasedatabase.app/");
         mReference = mDatabase.getReference();
@@ -41,6 +48,7 @@ public class FirebaseDatabaseHelper {
 
     public void readData(final DataStatus dataStatus){
         mReference.addValueEventListener(new ValueEventListener() {//House/chores
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 users.clear();//Clears the previous users from the list to replace them with the new ones
@@ -78,9 +86,38 @@ public class FirebaseDatabaseHelper {
                     }
                     user.setChoreList((ArrayList<ChoreWithID>) mPQ.getChores());//sets the list of chores with the chores that have been arranged based on their priority.
                 }
-//                newDay(users);
                 dataStatus.DataIsLoaded(users, houseID);
 
+                //Check the chores date and update the priorities to match
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
+                LocalDate today = LocalDate.now();//Current date
+                String check = snapshot.child("homes").child(houseID).child("check").getValue(String.class);
+                LocalDate lastCheck = LocalDate.parse(check, formatter);
+
+                if(!lastCheck.isEqual(today)){//If the app has not updated the chores today
+//                    System.out.println("[YYY]>> lastCheck: "+lastCheck+", today: "+today+", is equal: "+lastCheck.isEqual(today));
+                    mReference.child("homes").child(houseID).child("check").setValue(today.toString());//Update the check variable on the database to let the app know that it has been updated today and to not continue with this if statement.
+
+                    for(User user:users){//loop through all the users
+                        for(ChoreWithID chore: user.getChoreList()){//Get the list of chores from each user.
+                            if(chore.getPriority()<11){//Safety net. Will stop the loop from setting the priority any higher than 11.
+                                String choreDate = chore.getDate();//Gets the date of which the chore was created.
+                                LocalDate parsedChoreDate = LocalDate.parse(choreDate, formatter);//parse the String choreDate into a LocalDate variable to be compared later.
+
+                                int daysBehind = 0;//This variable is used in the while loop to check how many days ago has a chore been made.
+                                while(parsedChoreDate.isBefore(today)){//loop for each day the chore was made until it reaches today's date.
+                                    parsedChoreDate = parsedChoreDate.plusDays(1);//Add one day to the parsedChoreDate
+                                    daysBehind++;
+                                }
+//                                System.out.println(">>>> days behind "+ daysBehind);
+                                //Priorities:  Undone=11; ASAP=10; Today=9; Tomorrow=8; Two days from now=7; 3 Days from now=6; More than 3 days=5
+                                int newPriority = chore.getPriority()+daysBehind;//Set newPriority variable that will add the previous priority a chore had with the number of days it was behind. E.g. If a chore was created yesterday with priority 9(Today), now the priority will be 10(ASAP)
+
+                                mReference.child("homes").child(houseID).child("tenants").child(user.getId()).child("chores").child(chore.getId()).child("priority").setValue(newPriority);//Assigns the new priority
+                            }
+                        }
+                    }
+                }
             }
 
             @Override
@@ -101,7 +138,7 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void updateChore(String houseID, String userID, String choreID ,Chore chore, final DataStatus dataStatus){
+    public void updateChore(String houseID, String userID, String choreID, Chore chore, final DataStatus dataStatus){
         mReference.child("homes").child(houseID).child("tenants").child(userID).child("chores").child(choreID).setValue(chore).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -111,8 +148,8 @@ public class FirebaseDatabaseHelper {
     }
 
 
-    public void deleteChore(String houseID, String userID, String key, final DataStatus dataStatus){//TODO: Make it so you can only delete your own chores
-        mReference.child("homes").child(houseID).child("tenants").child(userID).child("chores").child(key).setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
+    public void deleteChore(String houseID, String userID, String choreID, final DataStatus dataStatus){//TODO: Make it so you can only delete your own chores
+        mReference.child("homes").child(houseID).child("tenants").child(userID).child("chores").child(choreID).setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 dataStatus.DataDeleted();
@@ -120,31 +157,33 @@ public class FirebaseDatabaseHelper {
         });
     }
 
-//    public void newDay(List<User> users){
-//        //Run task every day
+
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    public void checkDate(){
+////        mReference.child("homes").child(houseID).child("tenants").child(userID).child("chores").child(choreID).child("priority").setValue(priority);
 //        Timer timer = new Timer();
 //
 //        TimerTask task = new TimerTask() {
 //            @Override
 //            public void run() {
-//                System.out.println(">>>>>>>> NEW day!!!!");
-//                for(User user:users){
-//                    for(Chore chore: user.getChoreList()){
-//                        int newPriority = chore.getPriority()+1;
-//                        chore.setPriority(newPriority);
-//                    }
+//                System.out.println(">>>>>>>> run()");
+//                LocalDate today = LocalDate.now();
+//                if(lastExecution!=today){
+//                    lastExecution = LocalDate.now();
+//                    ranToday = false;
 //                }
+//
 //            }
 //        };
 //
 //        Calendar date = Calendar.getInstance();
-//        date.set(Calendar.HOUR_OF_DAY,1);
-//        date.set(Calendar.MINUTE,43);
-//        date.set(Calendar.SECOND,0);
-//
+//        date.set(Calendar.HOUR_OF_DAY,14);
+//        date.set(Calendar.MINUTE,29);
 //
 //        timer.scheduleAtFixedRate(task, date.getTime(), 86400000);
+//
 //    }
+
 
 
 }
