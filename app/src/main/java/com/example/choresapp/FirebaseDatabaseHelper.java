@@ -12,7 +12,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class FirebaseDatabaseHelper {
     private FirebaseDatabase mDatabase;
@@ -75,6 +78,7 @@ public class FirebaseDatabaseHelper {
                     }
                     user.setChoreList((ArrayList<ChoreWithID>) mPQ.getChores());//sets the list of chores with the chores that have been arranged based on their priority.
                 }
+//                newDay(users);
                 dataStatus.DataIsLoaded(users, houseID);
 
             }
@@ -115,6 +119,32 @@ public class FirebaseDatabaseHelper {
             }
         });
     }
+
+//    public void newDay(List<User> users){
+//        //Run task every day
+//        Timer timer = new Timer();
+//
+//        TimerTask task = new TimerTask() {
+//            @Override
+//            public void run() {
+//                System.out.println(">>>>>>>> NEW day!!!!");
+//                for(User user:users){
+//                    for(Chore chore: user.getChoreList()){
+//                        int newPriority = chore.getPriority()+1;
+//                        chore.setPriority(newPriority);
+//                    }
+//                }
+//            }
+//        };
+//
+//        Calendar date = Calendar.getInstance();
+//        date.set(Calendar.HOUR_OF_DAY,1);
+//        date.set(Calendar.MINUTE,43);
+//        date.set(Calendar.SECOND,0);
+//
+//
+//        timer.scheduleAtFixedRate(task, date.getTime(), 86400000);
+//    }
 
 
 }

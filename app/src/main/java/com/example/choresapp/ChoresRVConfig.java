@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ChoresRVConfig {
     private Context mContext;
@@ -85,7 +86,11 @@ public class ChoresRVConfig {
         //displays info into the row layout(chore_item.xml)
         public void bind(ChoreWithID chore){
             mCheckbox.setText(chore.getName());
-            if(chore.getPriority()>=10){
+            if(chore.getPriority()>10){
+                mCheckbox.setBackgroundColor(Color.parseColor("#ff3636"));
+                mCheckbox.setTextColor(Color.parseColor("#000000"));
+            }
+            else if(chore.getPriority()==10){
                 mCheckbox.setBackgroundColor(Color.parseColor("#FF7070"));
                 mCheckbox.setTextColor(Color.parseColor("#1f1f1f"));
             }

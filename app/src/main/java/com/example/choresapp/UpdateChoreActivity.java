@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.time.LocalDate;
@@ -22,7 +23,11 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
     private Button mCancelBtn;
     private EditText mChoreName;
     private int mChorePriority;
+    private TextView mPriorityTV;
     private LocalDate newDate;
+
+    private Spinner prioritySpinner;
+
 
     private String oldName;
     private String oldPriority;
@@ -46,27 +51,31 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
 
         mChoreName = (EditText) findViewById(R.id.choreNameED);
         mChoreName.setText(oldName);
+        mPriorityTV = (TextView) findViewById(R.id.priorityTV);
         newDate = LocalDate.now();
 
         mCancelBtn = (Button) findViewById(R.id.cancelBtn);
         mUpdateBtn = (Button) findViewById(R.id.updateChoreBtn);
 
         //Spinner setup
-        Spinner prioritySpinner = findViewById(R.id.prioritySpinner);
+        prioritySpinner = findViewById(R.id.prioritySpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.prioritySpinner, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         prioritySpinner.setAdapter(adapter);
         prioritySpinner.setOnItemSelectedListener(this);
-//        prioritySpinner.setSelection(getIndexSpinnerItem(prioritySpinner));
+
+        if(Integer.parseInt(oldPriority)>10){//If chore has a higher priority than 10 it means it was not done and that it cannot be changed.
+            prioritySpinner.setVisibility(View.GONE);
+            mPriorityTV.setVisibility(View.GONE);
+        }
+        else {
+            prioritySpinner.setSelection(getIndexSpinnerItem(Integer.parseInt(oldPriority)));
+        }
 
         mUpdateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ChoreWithID chore = new ChoreWithID(mChoreName.getText().toString(),mChorePriority,newDate.toString(),choreID);//TODO: complete tutorial from here
-//                chore.setDate(newDate.toString());
-//                chore.setName(mChoreName.getText().toString());
-//                chore.setPriority(mChorePriority);
-//                chore.setId(choreID);
 
                 new FirebaseDatabaseHelper().updateChore(houseID, userID, chore.getId(), chore, new FirebaseDatabaseHelper.DataStatus() {
                     @Override
@@ -104,14 +113,21 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
 
 
 
-    private int getIndexSpinnerItem(Spinner spinner){
-        int index = 0;
-        for(int i=0; i<spinner.getCount(); i++){
-            System.out.println("YYYY> Bottom: "+ spinner.getBottom()+", Baseline: "+spinner.getBaseline());
-//            if(spinner.getItemAtPosition(i).equals(item)){
-//                index = i;
-//                break;
-//            }
+    private int getIndexSpinnerItem(int i){
+        int index =0;
+
+        if(i==10){
+            index = 0;
+        }else if(i==9){
+            index = 1;
+        }else if(i==8){
+            index = 2;
+        }else if(i==7){
+            index = 3;
+        }else if(i==6){
+            index = 4;
+        }else if(i==5){
+            index = 5;
         }
         return index;
     }
