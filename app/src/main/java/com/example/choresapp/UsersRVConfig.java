@@ -46,8 +46,6 @@ public class UsersRVConfig {
             if(user.getChoreList().isEmpty()){//Ref: https://www.youtube.com/watch?v=E7FEVV74jz0
                 mUserName.setVisibility(View.GONE);
                 choresRV.setVisibility(View.GONE);
-//                emptyView.setVisibility(View.VISIBLE);
-//                emptyView.setText("No chores for "+user.getName());
             }
             else{
                 //Calls upon the chores rv config to print data

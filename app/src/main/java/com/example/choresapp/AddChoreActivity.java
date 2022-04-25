@@ -27,7 +27,6 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
     private int mChorePriority;
     private LocalDate date;
     private String houseID;
-//    private ArrayList<User> users = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -43,14 +42,7 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
 
         houseID = getIntent().getStringExtra("houseID");
 
-//        Bundle bundle = getIntent().getExtras();
-//        ArrayList<User> users = bundle.getParcelableArrayList("usersList");
-
         ArrayList<User> users = getIntent().getParcelableArrayListExtra("usersList");
-
-        System.out.println("<><><><>>>>>>> This is the first user: "+users.get(1).getId());
-        System.out.println("<><><><>>>>>>> Chore array for the first user: "+users.get(0).getChoreList());
-//        System.out.println("//"+ users.get(0).getChoreList().get(0).getId());
 
         //Spinner setup
         Spinner prioritySpinner = findViewById(R.id.prioritySpinner);
@@ -72,14 +64,11 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
                     int totalPriority = 0;
                     List<ChoreWithID> chores = user.getChoreList();
                     for(ChoreWithID chore: chores){ //calculate the total priority for each user
-//                        System.out.println("#### User: "+user.getName()+", Priority: "+ chore.getPriority()+", "+chore.getName()+", "+chore.getDate());
                         totalPriority += chore.getPriority();
                     }
                     user.setTotalPriority(totalPriority);
-                    System.out.println("#### User: "+user.getName()+", Priority Total: "+ totalPriority);
 
                     addToList(prioritiesList, user, user.getTotalPriority());//Sort the list
-                    System.out.println("####>> User: "+user.getName()+", > "+ user.getTotalPriority());
                 }
                 //find the lowest and the highest
                 User userLowestPriorityTotal = prioritiesList.get(0);
@@ -100,7 +89,6 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
                 if(mChorePriority == 10 || mChorePriority == 9 || !equalChoresAmount) {
                     userID = userLowestPriorityTotal.getId();
                     Chore chore = new Chore(mChoreName.getText().toString(), mChorePriority, date.toString());//Creates the new chore with the values in the current activity.
-                    System.out.println("Chore "+chore.getName()+" > "+chore.getPriority()+" added to: "+ userLowestPriorityTotal.getName());
                     new FirebaseDatabaseHelper().addChore(houseID, userID, chore, new FirebaseDatabaseHelper.DataStatus() {//TODO Always update the username in here to one that exists in order to add chores.
                         @Override
                         public void DataIsLoaded(List<User> users, String houseID) {
@@ -126,7 +114,6 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
                 else{
                     userID = userHighestPriorityTotal.getId();
                     Chore chore = new Chore(mChoreName.getText().toString(), mChorePriority, date.toString());//Creates the new chore with the values in the current activity.
-                    System.out.println("Chore "+chore.getName()+" > "+chore.getPriority()+" added to: "+ userHighestPriorityTotal.getName());
                     new FirebaseDatabaseHelper().addChore(houseID, userID, chore, new FirebaseDatabaseHelper.DataStatus() {//TODO Always update the username in here to one that exists in order to add chores.
                         @Override
                         public void DataIsLoaded(List<User> users, String houseID) {
@@ -189,7 +176,6 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//        String selection = adapterView.getItemAtPosition(i).toString();
         if(i==0){
             mChorePriority = 10;
         }else if(i==1){
@@ -203,7 +189,6 @@ public class AddChoreActivity extends AppCompatActivity implements AdapterView.O
         }else if(i==5){
             mChorePriority = 5;
         }
-//        Toast.makeText(adapterView.getContext(),String.valueOf(mChorePriority),Toast.LENGTH_SHORT).show();
     }
 
     @Override

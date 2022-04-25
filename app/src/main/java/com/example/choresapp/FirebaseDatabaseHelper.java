@@ -37,8 +37,6 @@ public class FirebaseDatabaseHelper {
         void DataDeleted();
     }
 
-    //INFO: Since this class is an object that gets instantiated throughout other classes the previously save values are lost.
-    //UPDATE: Changing the database structure to get the usernames first then the keys
     @RequiresApi(api = Build.VERSION_CODES.O)
     public FirebaseDatabaseHelper(){
         mDatabase = FirebaseDatabase.getInstance("https://houseshare-2ddd0-default-rtdb.europe-west1.firebasedatabase.app/");
@@ -52,13 +50,11 @@ public class FirebaseDatabaseHelper {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 users.clear();//Clears the previous users from the list to replace them with the new ones
-//                System.out.println("##Clear<>");
 
                 String houseID = snapshot.child("users").child(userID).child("home").getValue(String.class);//Stores the Id of the house the user is part of. It doesn't have to be an object it can also be a variable and it wil behave the same.
                 DataSnapshot tenantsSnapshot = snapshot.child("homes").child(houseID).child("tenants");//I made a variable so that I would not have to provide all the children each time.
 
                 for(DataSnapshot UserNode : tenantsSnapshot.getChildren()){//Loops through all the children (users) of the chores parent in the database.
-//                    System.out.println("### "+UserNode.getKey());
                     User user = new User();
                     PQInterface mPQ = new MyPriorityQueue();//Creates instance of the priority queue. I need a new priority queue for each user to only stores one users chores.
 
@@ -81,21 +77,19 @@ public class FirebaseDatabaseHelper {
 
                             int priority = keyNode.child("priority").getValue(Integer.class);//gets the priority of the chore.
                             mPQ.enqueue(priority, choreWithID);//Adds the chore and the priority to the priority queue to be arranged.
-//                            System.out.println("###> chores: "+keyNode.getKey()+" > "+ keyNode.getValue());
                         }
                     }
                     user.setChoreList((ArrayList<ChoreWithID>) mPQ.getChores());//sets the list of chores with the chores that have been arranged based on their priority.
                 }
                 dataStatus.DataIsLoaded(users, houseID);
 
-                //Check the chores date and update the priorities to match
+                //Check the chores date and update the priorities.
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
                 LocalDate today = LocalDate.now();//Current date
                 String check = snapshot.child("homes").child(houseID).child("check").getValue(String.class);
                 LocalDate lastCheck = LocalDate.parse(check, formatter);
 
                 if(!lastCheck.isEqual(today)){//If the app has not updated the chores today
-//                    System.out.println("[YYY]>> lastCheck: "+lastCheck+", today: "+today+", is equal: "+lastCheck.isEqual(today));
                     mReference.child("homes").child(houseID).child("check").setValue(today.toString());//Update the check variable on the database to let the app know that it has been updated today and to not continue with this if statement.
 
                     for(User user:users){//loop through all the users
@@ -109,7 +103,6 @@ public class FirebaseDatabaseHelper {
                                     parsedChoreDate = parsedChoreDate.plusDays(1);//Add one day to the parsedChoreDate
                                     daysBehind++;
                                 }
-//                                System.out.println(">>>> days behind "+ daysBehind);
                                 //Priorities:  Undone=11; ASAP=10; Today=9; Tomorrow=8; Two days from now=7; 3 Days from now=6; More than 3 days=5
                                 int newPriority = chore.getPriority()+daysBehind;//Set newPriority variable that will add the previous priority a chore had with the number of days it was behind. E.g. If a chore was created yesterday with priority 9(Today), now the priority will be 10(ASAP)
 
@@ -156,33 +149,6 @@ public class FirebaseDatabaseHelper {
             }
         });
     }
-
-
-//    @RequiresApi(api = Build.VERSION_CODES.O)
-//    public void checkDate(){
-////        mReference.child("homes").child(houseID).child("tenants").child(userID).child("chores").child(choreID).child("priority").setValue(priority);
-//        Timer timer = new Timer();
-//
-//        TimerTask task = new TimerTask() {
-//            @Override
-//            public void run() {
-//                System.out.println(">>>>>>>> run()");
-//                LocalDate today = LocalDate.now();
-//                if(lastExecution!=today){
-//                    lastExecution = LocalDate.now();
-//                    ranToday = false;
-//                }
-//
-//            }
-//        };
-//
-//        Calendar date = Calendar.getInstance();
-//        date.set(Calendar.HOUR_OF_DAY,14);
-//        date.set(Calendar.MINUTE,29);
-//
-//        timer.scheduleAtFixedRate(task, date.getTime(), 86400000);
-//
-//    }
 
 
 

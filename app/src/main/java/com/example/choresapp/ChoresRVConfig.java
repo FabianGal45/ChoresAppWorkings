@@ -3,6 +3,7 @@ package com.example.choresapp;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,7 +42,6 @@ public class ChoresRVConfig {
             mCheckbox.setOnLongClickListener(new View.OnLongClickListener() {//Implements on long click listener to open am edit menu
                 @Override
                 public boolean onLongClick(View view) {
-                    System.out.println("INTENT THING> "+chore.getName());
                     Intent intent = new Intent(mContext, UpdateChoreActivity.class);
                     intent.putExtra("name", chore.getName()); //these putExtra methods are sending over the following values into the updateChoreActivity to be displayed.
                     intent.putExtra("priority", Integer.toString(chore.getPriority()));
@@ -54,6 +55,7 @@ public class ChoresRVConfig {
             });
 
             mCheckbox.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onClick(View view) {
                     if(mCheckbox.isChecked()){
@@ -75,7 +77,7 @@ public class ChoresRVConfig {
 
                             @Override
                             public void DataDeleted() {
-                                Toast.makeText(mContext, "Chore successfully deleted", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(mContext, "Chore successfully deleted", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -91,7 +93,7 @@ public class ChoresRVConfig {
                 mCheckbox.setTextColor(Color.parseColor("#000000"));
             }
             else if(chore.getPriority()==10){
-                mCheckbox.setBackgroundColor(Color.parseColor("#FF7070"));
+                mCheckbox.setBackgroundColor(Color.parseColor("#83FC73"));
                 mCheckbox.setTextColor(Color.parseColor("#1f1f1f"));
             }
             else if(chore.getPriority()==9){

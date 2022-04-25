@@ -25,6 +25,7 @@ public class MainChoresActivity extends AppCompatActivity {
     private TextView mNoChoresTV;
     private TextView mNoChoresArrowTV;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
