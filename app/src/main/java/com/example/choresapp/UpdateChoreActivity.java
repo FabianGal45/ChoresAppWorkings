@@ -79,7 +79,7 @@ public class UpdateChoreActivity extends AppCompatActivity implements AdapterVie
 
                 new FirebaseDatabaseHelper().updateChore(houseID, userID, chore.getId(), chore, new FirebaseDatabaseHelper.DataStatus() {
                     @Override
-                    public void DataIsLoaded(List<User> users, String houseID) {
+                    public void DataIsLoaded(List<User> users, String houseID, String check) {
 
                     }
 
